@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ReferencePath>C:\Program Files\Bentley\MicroStation 2023\MicroStation;C:\Program Files\Bentley\MicroStation 2023\MicroStation\Assemblies;C:\Program Files\Bentley\MicroStation 2023\MicroStation\Assemblies\ECFramework</ReferencePath>
+  </PropertyGroup>
+</Project>

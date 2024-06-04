@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="GeoCode.UI.AddCategory"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:GeoCode.UI"
+             xmlns:bentleywpf="clr-namespace:Bentley.UI.Vendor.Wpf;assembly=Bentley.UI.Vendor.Wpf"
+             mc:Ignorable="d"
+             MinWidth="150" MinHeight="70"
+             d:DesignHeight="70" d:DesignWidth="150" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Label HorizontalAlignment="Center"> Nom </Label>
+            <StackPanel Width="110" VerticalAlignment="Center">
+                <TextBox Name="NameTextBox"/>
+            </StackPanel>
+        </StackPanel>
+        <Button Name="AddCategoryButton" Grid.Row="1" Width="30" HorizontalAlignment="Center" Click="AddCategoryButton_OnClick">
+            <Image Source="Pictures/plus.png" />
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text.Length, ElementName=NameTextBox, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</UserControl>

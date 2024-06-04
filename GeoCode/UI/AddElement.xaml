@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="GeoCode.UI.AddElement"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="130" d:DesignWidth="230" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Label Width="70" HorizontalAlignment="Center">Cellule</Label>
+            <StackPanel Width="150">
+                <ComboBox Name="CellSelection" IsEditable="True" IsTextSearchEnabled="True"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label Width="70" HorizontalAlignment="Center"> Niveau </Label>
+            <StackPanel Width="150">
+                <ComboBox Name="LevelSelection" IsEditable="True" IsTextSearchEnabled="True"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <Label Width="70" HorizontalAlignment="Center"> Placement </Label>
+            <StackPanel Width="150">
+                <ComboBox Name="PlacementSelection" IsEditable="True" IsTextSearchEnabled="True"/>
+            </StackPanel>
+        </StackPanel>
+        <Button Name="AddElementButton" Grid.Row="3" Width="40" Click="AddElementButton_OnClick">
+            <Image Source="Pictures/plus.png"></Image>
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text.Length, ElementName=CellSelection, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Text.Length, ElementName=LevelSelection, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Text.Length, ElementName=PlacementSelection, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</UserControl>

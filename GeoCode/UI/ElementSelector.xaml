@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="GeoCode.UI.ElementSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModel="clr-namespace:GeoCode.ViewModel"
+             mc:Ignorable="d"
+             MinWidth="300" MinHeight="300"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <DockPanel>
+        <Grid Name="SettingBar" DockPanel.Dock="Top" Height="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="OpenAddElementMenuButton" Click="OpenAddElementMenuButton_OnClick">
+                <Image Source="Pictures/plus.png"/>
+            </Button>
+            <Button Grid.Column="1" Name="SettingsButton" Click="SettingsButton_OnClick">
+                <TextBlock Text="Settings"/>
+            </Button>
+        </Grid>
+        <DockPanel>
+            <Grid DockPanel.Dock="Top" Name="CategoryGrid">
+                <Grid.DataContext><viewModel:CategoriesViewModel /></Grid.DataContext>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="20"/>
+                </Grid.ColumnDefinitions>
+                <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" >
+                    <ItemsControl Name="CategoryControl" ItemsSource="{Binding Categories}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Command="{Binding Focus}">
+                                    <TextBlock Text="{Binding Name}"/>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <Button Grid.Column="1" Name="OpenAddCategoryMenuButton" HorizontalAlignment="Left" Click="OpenAddCategoryMenuButton_OnClick">
+                    <Image Source="Pictures/plus.png" />
+                </Button>
+            </Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl Name="CellControl" ItemsSource="{Binding Cells}" VerticalAlignment="Top">
+                    <ItemsControl.DataContext><viewModel:CellViewModel /></ItemsControl.DataContext>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding PlaceCommand}" Width="50" Height="50" >
+                                <TextBlock Text="{Binding Name}"/>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </DockPanel>
+</UserControl>

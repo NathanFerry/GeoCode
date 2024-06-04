@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoCode", "GeoCode\GeoCode.csproj", "{CAA36B6F-400A-4C0D-9F87-BE53C744C224}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Design|x64 = Design|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CAA36B6F-400A-4C0D-9F87-BE53C744C224}.Debug|x64.ActiveCfg = Debug|x64
+		{CAA36B6F-400A-4C0D-9F87-BE53C744C224}.Debug|x64.Build.0 = Debug|x64
+		{CAA36B6F-400A-4C0D-9F87-BE53C744C224}.Design|x64.ActiveCfg = Design|x64
+		{CAA36B6F-400A-4C0D-9F87-BE53C744C224}.Design|x64.Build.0 = Design|x64
+		{CAA36B6F-400A-4C0D-9F87-BE53C744C224}.Release|x64.ActiveCfg = Release|x64
+		{CAA36B6F-400A-4C0D-9F87-BE53C744C224}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8F17C7BA-36C1-42A2-ACBD-12382EFFCAAB}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,20 @@
+C:\Program Files\Bentley\MicroStation 2023\MicroStation\Mdlapps\GeoCode.dll
+C:\Program Files\Bentley\MicroStation 2023\MicroStation\Mdlapps\GeoCode.pdb
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode.csproj.AssemblyReference.cache
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\UI\AddElement.baml
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\UI\AddCategory.g.cs
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\UI\AddElement.g.cs
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\UI\ElementSelector.g.cs
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\UI\Settings.g.cs
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode_MarkupCompile.cache
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode_MarkupCompile.lref
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\UI\AddCategory.baml
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\UI\ElementSelector.baml
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\UI\Settings.baml
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode.g.resources
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode.Properties.Resources.resources
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode.csproj.GenerateResource.cache
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode.csproj.CoreCompileInputs.cache
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode.dll
+C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode.pdb
