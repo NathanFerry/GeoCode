@@ -1,0 +1,8 @@
+#IDE Settings
+.idea
+.vs
+
+#Dev Environment
+packages
+GeoCode/bin
+
