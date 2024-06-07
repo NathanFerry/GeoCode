@@ -1,24 +1,15 @@
 ﻿using System;
 using Bentley.DgnPlatformNET;
+using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
 using Bentley.MstnPlatformNET;
+using GeoCode.Utils;
 using SharedCellElement = Bentley.DgnPlatformNET.Elements.SharedCellElement;
 
 namespace GeoCode.Cells
 {
     public static class SharedCellHelper
     {
-        public static SharedCellElement CreateSharedCell(SharedCellElement referenceCell, DgnButtonEvent ev)
-        {
-            return new SharedCellElement(
-                Session.Instance.GetActiveDgnModel(),
-                referenceCell,
-                referenceCell.CellName,
-                ev.Point,
-                DMatrix3d.Identity, 
-                new DPoint3d(referenceCell.Scale));
-        }
-
         public static SharedCellElement CreateSharedCell(SharedCellElement referenceCell, DPoint3d origin)
         {
             return new SharedCellElement(
@@ -27,7 +18,20 @@ namespace GeoCode.Cells
                 referenceCell.CellName,
                 origin,
                 DMatrix3d.Identity,
-                new DPoint3d(referenceCell.Scale));
+                referenceCell.Scale
+                );
+        }
+        
+        public static SharedCellElement CreateSharedCell(SharedCellDefinitionElement cellDefinition, DPoint3d origin)
+        {
+            return new SharedCellElement(
+                Session.Instance.GetActiveDgnModel(),
+                cellDefinition,
+                cellDefinition.CellName,
+                origin,
+                DMatrix3d.Identity,
+                cellDefinition.Scale
+            );
         }
 
         public static double ComputeLength(SharedCellElement cell)

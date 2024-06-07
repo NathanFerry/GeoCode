@@ -15,6 +15,7 @@ using GeoCode.Model;
 using Newtonsoft.Json;
 using GeoCode.Cells;
 using GeoCode.Saving;
+using GeoCode.UI;
 
 namespace GeoCode
 {
@@ -40,7 +41,10 @@ namespace GeoCode
             // Register event handlers
             Addin.ReloadEvent += GeoCode_ReloadEvent;
             Addin.UnloadedEvent += GeoCode_UnloadedEvent;
-            Session.Instance.Keyin("GeoCode PickPlace");
+            
+            // Open user interface
+            Session.Instance.Keyin("GeoCode Interface Show");
+            
             return 0;
         }
 
@@ -73,11 +77,6 @@ namespace GeoCode
         protected override void OnUnloading(UnloadingEventArgs eventArgs)
         {
             base.OnUnloading(eventArgs);
-        }
-
-        internal void StartSharedCellPickPlaceTool()
-        {
-            SharedCellPickPlaceTool.InstallNewInstance();
         }
         
         internal static GeoCode Instance()

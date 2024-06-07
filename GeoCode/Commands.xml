@@ -18,12 +18,19 @@
   <!--Define subtables-->
   <SubKeyinTables>
     <KeyinTable ID="GeoCode">
-      <Keyword CommandWord="PickPlace"> </Keyword>
-      </KeyinTable>
+      <Keyword CommandWord="PickPlace"/>
+      <Keyword CommandWord="Interface" SubtableRef="Interface"/>
+    </KeyinTable>
+    
+    <KeyinTable ID="Interface">
+      <Keyword CommandWord="Show"> </Keyword>
+    </KeyinTable>
   </SubKeyinTables>
+  
 
   <!--Define a mapping from key-in to the method that handles the key-in.-->
   <KeyinHandlers>
-    <KeyinHandler Keyin="GeoCode PickPlace" Function="GeoCode.KeyinCommands.CmdStartCellPickPlaceTool"/>
+    <KeyinHandler Keyin="GeoCode PickPlace" Function="GeoCode.KeyinCommands.StartCellPickPlaceTool"/>
+    <KeyinHandler Keyin="GeoCode Interface Show" Function="GeoCode.KeyinCommands.ShowInterface" />
 </KeyinHandlers>
 </KeyinTree>

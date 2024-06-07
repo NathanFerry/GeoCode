@@ -9,14 +9,14 @@ namespace GeoCode.Cells.Placement
      public class PlacementTypeElement
     {
         [JsonProperty]
-        private string Value { get; }
+        public string Value { get; }
         
         [JsonConstructor] public PlacementTypeElement(string value) { Value = value; }
         
-        public static PlacementTypeElement OnePoint => new("1 Point");
-        public static PlacementTypeElement OnePointScaling => new("1 Point - Mise à l'échelle");
-        public static PlacementTypeElement TwoPointsRotationScaling => new("2 Points - Rotation - Mise à l'échelle");
-        public static PlacementTypeElement ThreePointRotationScaling => new("3 Points - Rotation - Mise à l'échelle");
+        public static PlacementTypeElement OnePoint() => new("1 Point");
+        public static PlacementTypeElement TwoPointsScaling() => new("2 Points - Mise à l'échelle");
+        public static PlacementTypeElement TwoPointsRotationScaling() => new("2 Points - Rotation - Mise à l'échelle");
+        public static PlacementTypeElement ThreePointRotationScaling() => new("3 Points - Rotation - Mise à l'échelle");
 
         public static PlacementTypeElement FromString(string placementType)
         {

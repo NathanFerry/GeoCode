@@ -6,6 +6,7 @@
 |
 +--------------------------------------------------------------------------------------*/
 
+using GeoCode.Cells.Placement;
 using GeoCode.UI;
 
 namespace GeoCode
@@ -20,9 +21,13 @@ namespace GeoCode
         /// Command to start SharedCellPickPlaceTool
         /// </summary>
         /// <param name="unparsed"></param>
-        public static void CmdStartCellPickPlaceTool(string unparsed)
+        public static void StartCellPickPlaceTool(string unparsed)
         {
-            GeoCode.Instance().StartSharedCellPickPlaceTool();
+            SharedCellPickPlaceTool.InstallNewInstance();
+        }
+
+        public static void ShowInterface(string unparsed)
+        {
             ElementSelector.ShowWindow();
         }
     }

@@ -144,9 +144,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cells\Placement\CellPlacement.cs" />
-    <Compile Include="Cells\Placement\CellPlacementAttribute.cs" />
     <Compile Include="Cells\Placement\PlacementTools\OnePointPlaceTool.cs" />
-    <Compile Include="Cells\Placement\PlacementTools\PlacementTestTool.cs" />
+    <Compile Include="Cells\Placement\PlacementTools\ThreePointRotationScalingPlaceTool.cs" />
+    <Compile Include="Cells\Placement\PlacementTools\TwoPointsRotationScalingPlaceTool.cs" />
+    <Compile Include="Cells\Placement\PlacementTools\TwoPointsScalingPlaceTool.cs" />
     <Compile Include="Cells\Placement\PlacementType.cs" />
     <Compile Include="Cells\Placement\SharedCellPickPlaceTool.cs" />
     <Compile Include="Cells\SharedCellHelper.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="UI\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\BentleyExtensionMethods.cs" />
     <Compile Include="Utils\ExtensionMethods.cs" />
     <Compile Include="Utils\IsExternalInit.cs" />
     <Compile Include="ViewModel\CategoriesViewModel.cs" />

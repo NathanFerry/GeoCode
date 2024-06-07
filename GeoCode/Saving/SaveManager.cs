@@ -10,7 +10,7 @@ namespace GeoCode.Saving;
 public static class SaveManager
 {
     private static readonly DirectoryInfo DirectoryInfo =
-        new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.CreateSubdirectory("CodifGeo");
+        new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.CreateSubdirectory("GeoCode");
 
     private static readonly string FilePath = DirectoryInfo.FullName + Path.DirectorySeparatorChar + "config.json";
     public static void Save()
