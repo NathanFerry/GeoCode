@@ -18,3 +18,21 @@ C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode.cspro
 C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode.csproj.CoreCompileInputs.cache
 C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode.dll
 C:\Users\Utilisateur\RiderProjects\TestAddin\GeoCode\obj\x64\Debug\GeoCode.pdb
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\GeoCode.csproj.AssemblyReference.cache
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\UI\AddElement.baml
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\UI\AddCategory.g.cs
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\UI\AddElement.g.cs
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\UI\ElementSelector.g.cs
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\UI\Settings.g.cs
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\GeoCode_MarkupCompile.cache
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\GeoCode_MarkupCompile.lref
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\UI\AddCategory.baml
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\UI\ElementSelector.baml
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\UI\Settings.baml
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\GeoCode.g.resources
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\GeoCode.Properties.Resources.resources
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\GeoCode.csproj.GenerateResource.cache
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\GeoCode.csproj.CoreCompileInputs.cache
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\GeoCode.dll
+C:\Users\enzob\OneDrive - GEOLIANCE\Documents\Kadran\GeoCode\GeoCode\obj\x64\Debug\GeoCode.pdb

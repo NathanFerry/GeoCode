@@ -4,13 +4,16 @@
 +--------------------------------------------------------------------------------------*/
 #region System Namespaces
 
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Markup;
 using Bentley.MstnPlatformNET;
 using GeoCode.Cells.Placement;
 using GeoCode.Model;
+using GeoCode.Saving;
 using GeoCode.ViewModel;
 
 #endregion
@@ -37,6 +40,24 @@ namespace GeoCode.UI
                 Level = LevelSelection.SelectedItem.ToString(),
                 Placement = PlacementTypeElement.FromString(PlacementSelection.SelectedItem.ToString())
             });
+        }
+
+        private void PasteButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (SavedCellToPaste.name == null)
+            {
+                MessageBox.Show("Aucune cellule n'a été copiée", 
+                    "Cellule", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
+            } else
+            {
+                this.CellSelection.SelectedItem = SavedCellToPaste.name;
+                this.LevelSelection.SelectedItem = SavedCellToPaste.level;
+                this.PlacementSelection.SelectedItem = SavedCellToPaste.placement;
+            }
+                
+            
         }
     }
 }
