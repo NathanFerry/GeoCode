@@ -12,7 +12,7 @@ public class ThreePointsRotationScalingPlaceTool : DgnPrimitiveTool
     private DPoint3d? _origin;
     private DPoint3d? _horizontalPoint;
     private DPoint3d? _verticalPoint;
-    private int _oldPos = 1;
+    private int _oldPos = -1;
     public ThreePointsRotationScalingPlaceTool(SharedCellDefinitionElement cellDefinition, int toolName, int toolPrompt) : base(toolName, toolPrompt)
     {
         _cellDefinition = cellDefinition;
@@ -75,11 +75,14 @@ public class ThreePointsRotationScalingPlaceTool : DgnPrimitiveTool
             
             var direction = new DVector3d(_origin.Value, _horizontalPoint.Value);
             direction.TryUnitPerpendicularXY(out var perpendicular);
-            var factor = new DVector3d(_origin.Value, ev.Point).DotProductXY(perpendicular) / SharedCellHelper.ComputeWidth(_cellElement);
+            var scalingVector = new DVector3d(_origin.Value, ev.Point);
+            var factor = scalingVector.DotProductXY(perpendicular) / SharedCellHelper.ComputeWidth(_cellElement);
             DTransform3d.TryFixedPointAndDirectionalScale(_origin.Value, direction.RotateXY(Angle.FromDegrees(90)), factor, out var scale);
+            
             Console.WriteLine($@"{factor}");
-            Console.WriteLine(new DVector3d(_origin.Value, ev.Point).DotProductXY(perpendicular));
+            Console.WriteLine(scalingVector.DotProductXY(perpendicular));
             Console.WriteLine($@"{SharedCellHelper.ComputeWidth(_cellElement)}");
+            
             _cellElement.ApplyTransform(new TransformInfo(scale));
         }
         

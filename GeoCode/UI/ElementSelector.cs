@@ -2,23 +2,21 @@
 |   ElementSelector.cs
 |
 +--------------------------------------------------------------------------------------*/
-
-
-using System.Collections.Generic;
-using System.Windows;
-using GeoCode.Saving;
-using GeoCode.ViewModel;
-
-#region System Namespaces
-
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Controls;
-#endregion
-
-#region Bentley Namespaces
-using Bentley.DgnPlatformNET;
 using Bentley.MstnPlatformNET.WPF;
 using Bentley.Windowing;
+using GeoCode.Saving;
+
+#region  Documentation
+
+/*
+|   This is the main menu of the GUI.
+|   It's using WPF.
+|   If you have any question, please refer to the documentation of WPF or the website https://wpf-tutorial.com/ .
+*/
 
 #endregion
 
@@ -41,7 +39,7 @@ namespace GeoCode.UI
 
             ElementSelectorDockableWindow = new DockableWindow();
             ElementSelectorDockableWindow.Content = new ElementSelector();
-            ElementSelectorDockableWindow.Attach(GeoCode.Addin, "control", new System.Drawing.Size(Convert.ToInt32(ElementSelectorDockableWindow.MinWidth),
+            ElementSelectorDockableWindow.Attach(GeoCode.Addin, "control", new Size(Convert.ToInt32(ElementSelectorDockableWindow.MinWidth),
                         Convert.ToInt32(ElementSelectorDockableWindow.MinHeight)));
             ElementSelectorDockableWindow.WindowContent.ContentCloseQuery += new ContentCloseEventHandler(OnClose);
         }

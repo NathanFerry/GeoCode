@@ -4,6 +4,9 @@ using Bentley.GeometryNET;
 
 namespace GeoCode.Utils;
 
+/*-----------------------------------------------------
+|   Those are extension methods relative to Microstation's SDK elements,
+-----------------------------------------------------*/
 public static class BentleyExtensionMethods
 {
     public static ElementPropertiesSetter SetLevelChain(this ElementPropertiesSetter eps, LevelId level)
@@ -16,6 +19,12 @@ public static class BentleyExtensionMethods
     {
         eps.SetColor(color);
         return eps;
+    }
+
+    public static double GetDisplayableElementXYDiagonalLength(this DisplayableElement displayableElement)
+    {
+        displayableElement.CalcElementRange(out var range);
+        return range.DiagonalVector.MagnitudeXY;
     }
 
     public static Angle GetActualXYAngle(this DisplayableElement element, out bool isXYRotation)

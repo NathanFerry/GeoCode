@@ -238,5 +238,8 @@
   <ItemGroup>
     <Resource Include="UI\Pictures\check.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Cells\README.md" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

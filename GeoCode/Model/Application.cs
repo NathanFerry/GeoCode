@@ -2,9 +2,21 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
 
 namespace GeoCode.Model;
+
+#region Documentation
+
+/*
+|   This model is used to represent the application state at runtime
+|   and to easily save it, by serializing the class to a JSON object.
+|
+|   It implement INotifyPropertyChanged to update the UI when values change.
+|   Please refer to WPF documentation as this is not part of the Bentley SDK
+|   so you can find many articles and posts to help you.
+*/
+
+#endregion
 
 public class Application : INotifyPropertyChanged
 {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using Bentley.DgnPlatformNET;
+﻿using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
 
 namespace GeoCode.Cells.Placement.PlacementTools;
-
-//TODO: Various special case to handle
 public class OnePointPlaceTool : DgnPrimitiveTool
 {
     private readonly SharedCellDefinitionElement _cellDefinition;
@@ -34,13 +30,6 @@ public class OnePointPlaceTool : DgnPrimitiveTool
     {
         _cellElement.GetSnapOrigin(out var origin);
         _cellElement.ApplyTransform(new TransformInfo(DTransform3d.FromTranslation(ev.Point - origin)));
-        
-        _cellElement.CalcElementRange(out var range);
-        if (origin == range.Low)
-        {
-            _cellElement.ApplyTransform(
-                new TransformInfo(DTransform3d.FromTranslation(-range.XSize / 2, -range.YSize / 2, 0)));
-        }
         
         var redraw = new RedrawElems();
         redraw.SetDynamicsViewsFromActiveViewSet(ev.Viewport);
