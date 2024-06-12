@@ -30,7 +30,11 @@
                 <ComboBox Name="PlacementSelection" IsEditable="True" IsTextSearchEnabled="True"/>
             </StackPanel>
         </StackPanel>
-        <Button Name="AddElementButton" Grid.Row="3" Width="40" Click="AddElementButton_OnClick">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" >
+            <Button Margin="5"  Name="PasteButton" Grid.Row="3" Width="40" Click="PasteButton_OnClick">
+                <TextBlock>Coller</TextBlock>
+        </Button>
+            <Button Margin="5"  Name="AddElementButton" Grid.Row="3" Width="40" Click="AddElementButton_OnClick">
             <Image Source="Pictures/plus.png"></Image>
             <Button.Style>
                 <Style TargetType="Button">
@@ -48,5 +52,6 @@
                 </Style>
             </Button.Style>
         </Button>
+        </StackPanel>
     </Grid>
 </UserControl>

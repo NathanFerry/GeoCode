@@ -57,7 +57,29 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Command="{Binding PlaceCommand}" Width="50" Height="50" >
+                            <Button Width="50" Height="50" >
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem 
+                                            IsCheckable="False"
+                                            Header="Modifier"
+                                        />
+                                        <MenuItem 
+                                            Command="{Binding PlaceCommand}"
+                                            IsCheckable="False"
+                                            Header="Placer"
+                                        />
+                                        <MenuItem 
+                                            Command="{Binding CopyCommand}"
+                                            IsCheckable="False"
+                                            Header="Copier"
+                                        />
+                                        <MenuItem 
+                                            IsCheckable="False"
+                                            Header="Supprimer"
+                                        />
+                                    </ContextMenu>
+                                </Button.ContextMenu>
                                 <TextBlock Text="{Binding Name}"/>
                             </Button>
                         </DataTemplate>

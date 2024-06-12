@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Windows;
 using System.Windows.Input;
 using Bentley.MstnPlatformNET;
 using Bentley.UI.Mvvm;
 using GeoCode.Cells.Placement;
+using GeoCode.Saving;
 using Newtonsoft.Json;
 
 namespace GeoCode.Model
@@ -48,17 +50,24 @@ namespace GeoCode.Model
 
         [JsonIgnore]
         public ICommand PlaceCommand { get; }
+        public ICommand CopyCommand { get; }
 
         public Cell()
         {
             PlaceCommand = new RelayCommand(PlacementMethod);
+            CopyCommand = new RelayCommand(CopyMethod);
         }
 
         private void PlacementMethod()
         {
             CellPlacement.PlacementTool(Name, Level, Placement);
         }
-        
+
+        private void CopyMethod()
+        {
+            SavedCellToPaste.Copy(this);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
