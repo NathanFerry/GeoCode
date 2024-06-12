@@ -16,7 +16,7 @@ namespace GeoCode.Cells.Placement
         public static PlacementTypeElement OnePoint() => new("1 Point");
         public static PlacementTypeElement TwoPointsScaling() => new("2 Points - Mise à l'échelle");
         public static PlacementTypeElement TwoPointsRotationScaling() => new("2 Points - Rotation - Mise à l'échelle");
-        public static PlacementTypeElement ThreePointRotationScaling() => new("3 Points - Rotation - Mise à l'échelle");
+        public static PlacementTypeElement ThreePointsRotationScaling() => new("3 Points - Rotation - Mise à l'échelle");
 
         public static PlacementTypeElement FromString(string placementType)
         {

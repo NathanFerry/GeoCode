@@ -14,7 +14,7 @@ namespace GeoCode.Cells.Placement;
 
 public static class CellPlacement
 {
-    private static Dictionary<string, string> _methodNameDictionary = typeof(PlacementTypeElement).GetMethods()
+    private static readonly Dictionary<string, string> MethodNameDictionary = typeof(PlacementTypeElement).GetMethods()
         .Where(it => it.ReturnType == typeof(PlacementTypeElement))
         .Where(it => it.IsStatic)
         .Where(it => !it.GetParameters().Any())
@@ -28,7 +28,7 @@ public static class CellPlacement
         new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).Apply(cellDefinition);
         try
         {
-            var typeName =  "GeoCode.Cells.Placement.PlacementTools." + _methodNameDictionary[placement.Value] + "PlaceTool";
+            var typeName =  "GeoCode.Cells.Placement.PlacementTools." + MethodNameDictionary[placement.Value] + "PlaceTool";
             Assembly.GetExecutingAssembly().GetType(typeName).GetMethod("InstallNewInstance")
                 .Invoke(null, new[] { cellDefinition });
         }
