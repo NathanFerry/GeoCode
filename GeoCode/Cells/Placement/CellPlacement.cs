@@ -11,11 +11,13 @@ namespace GeoCode.Cells.Placement;
 
 public static class CellPlacement
 {
+    //Store the value of the placement, along to its placement tool to not compute it everytime the PlacementTool method is called.
     private static readonly Dictionary<string, string> MethodNameDictionary = typeof(PlacementTypeElement).GetMethods()
         .Where(it => it.ReturnType == typeof(PlacementTypeElement))
         .Where(it => it.IsStatic)
         .Where(it => !it.GetParameters().Any())
         .ToDictionary(it => ((PlacementTypeElement)it.Invoke(null, null)).Value, it => it.Name);
+    
     public static void PlacementTool(string cellName, string cellLevel, PlacementTypeElement placement)
     {
         var cellDefinition = Session.Instance.GetActiveDgnFile().GetNamedSharedCellDefinitions()
@@ -25,6 +27,8 @@ public static class CellPlacement
         new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).Apply(cellDefinition);
         try
         {
+            //Using reflection to invoke InstallNewInstance method of tools. Placement tool must be named following this pattern:
+            //<Placement Type>PlaceTool.
             var typeName =  "GeoCode.Cells.Placement.PlacementTools." + MethodNameDictionary[placement.Value] + "PlaceTool";
             Assembly.GetExecutingAssembly().GetType(typeName).GetMethod("InstallNewInstance")
                 .Invoke(null, new[] { cellDefinition });

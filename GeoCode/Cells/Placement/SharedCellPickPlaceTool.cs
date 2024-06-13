@@ -1,7 +1,6 @@
 ﻿using System;
 using Bentley.DgnPlatformNET;
 using Bentley.GeometryNET;
-using GeoCode.Model;
 using Element = Bentley.DgnPlatformNET.Elements.Element;
 using SharedCellElement = Bentley.DgnPlatformNET.Elements.SharedCellElement;
 

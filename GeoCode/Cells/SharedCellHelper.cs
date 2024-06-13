@@ -9,6 +9,12 @@ namespace GeoCode.Cells;
 
 public static class SharedCellHelper
 {
+    /// <summary>
+    /// Use to create a new SharedCell because Microstation's SDK doesn't provide a method to do it.
+    /// </summary>
+    /// <param name="referenceCell"></param>
+    /// <param name="origin"></param>
+    /// <returns></returns>
     public static SharedCellElement CreateSharedCell(SharedCellElement referenceCell, DPoint3d origin)
     {
         return new SharedCellElement(
@@ -20,7 +26,13 @@ public static class SharedCellHelper
             referenceCell.Scale
         );
     }
-        
+    
+    /// <summary>
+    /// Use to create a new SharedCell because Microstation's SDK doesn't provide a method to do it.
+    /// </summary>
+    /// <param name="cellDefinition"></param>
+    /// <param name="origin"></param>
+    /// <returns></returns>
     public static SharedCellElement CreateSharedCell(SharedCellDefinitionElement cellDefinition, DPoint3d origin)
     {
         return new SharedCellElement(
@@ -33,6 +45,22 @@ public static class SharedCellHelper
         );
     }
 
+    #region Documentation
+    /*
+    |   Microstation Cells are represented and displayed in two different ways:
+    |   - The Cell itself, which is the "drawing" of the shape you see.
+    |   - The DisplayableElement, which is the box containing the cell.
+    |   I didn't find who to get the length and width of the cell.
+    |   However, I did find who to get DisplayableElement length and width, so I used them, along with some trigonometry
+    |   to calculate the value for the cell. 
+     */ 
+    #endregion
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cell"></param>
+    /// <returns>The length of the drawing displayed</returns>
     public static double ComputeLength(SharedCellElement cell)
     {
         cell.GetOrientation(out var orientation);
@@ -59,6 +87,11 @@ public static class SharedCellHelper
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cell"></param>
+    /// <returns>The length of the drawing displayed</returns>
     public static double ComputeWidth(SharedCellElement cell)
     {
         cell.GetOrientation(out var orientation);
