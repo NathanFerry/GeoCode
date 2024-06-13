@@ -68,7 +68,7 @@ public class ThreePointsRotationScalingPlaceTool : DgnPrimitiveTool
             _cellElement.ApplyTransform(new TransformInfo(scaling));
         } else if (_verticalPoint is null)
         {
-            var pos = (_horizontalPoint.Value.X - _origin.Value.X) * (ev.Point.Y - _origin.Value.Y) >
+            var crossProductDirection = (_horizontalPoint.Value.X - _origin.Value.X) * (ev.Point.Y - _origin.Value.Y) >
                       (_horizontalPoint.Value.Y - _origin.Value.Y) * (ev.Point.X - _origin.Value.X)
                 ? 1
                 : -1;

@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Bentley.DgnPlatformNET;
-using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
 using Bentley.MstnPlatformNET;
-using Bentley.UI.Controls.WinForms;
-using Bentley.UI.Mvvm;
 using GeoCode.Utils;
 
 namespace GeoCode.Cells.Placement;

@@ -4,8 +4,7 @@
 |   Main entry class establishing a connection to the MicroStation host.
 |
 |   Addin originally created by Nathan Ferry and Enzo Bertel.
-|   Please contact nathan.ferry@live.fr for any question regarding the programme or its use.
-|   Some documentation will be placed to help you understand either the code or Microstation's SDK.
+|   Some documentation will be dispatched to help you understand either the code or Microstation's SDK.
 |
 +--------------------------------------------------------------------------------------*/
 
@@ -64,15 +63,6 @@ namespace GeoCode
         {
             var message = "Unloaded [Reason : " + eventArgs.UnloadKind + "]";
             MessageCenter.Instance.ShowInfoMessage(message, "", false);
-        }
-
-        /// <summary>
-        /// Handles MDL ONUNLOAD requests when the application is being unloaded.
-        /// </summary>
-        /// <param name="eventArgs"></param>
-        protected override void OnUnloading(UnloadingEventArgs eventArgs)
-        {
-            base.OnUnloading(eventArgs);
         }
         
         internal static GeoCode Instance()

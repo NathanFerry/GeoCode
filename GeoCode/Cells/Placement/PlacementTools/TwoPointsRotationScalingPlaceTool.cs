@@ -1,5 +1,4 @@
-﻿using System;
-using Bentley.DgnPlatformNET;
+﻿using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
 using GeoCode.Utils;
@@ -17,7 +16,6 @@ public class TwoPointsRotationScalingPlaceTool : DgnPrimitiveTool
     {
         _cellDefinition = cellDefinition;
         _cellElement = SharedCellHelper.CreateSharedCell(cellDefinition, DPoint3d.Zero);
-        Console.WriteLine("New Two points Rotation Scaling");
     }
 
     protected override bool OnDataButton(DgnButtonEvent ev)

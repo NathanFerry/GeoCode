@@ -57,7 +57,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Width="50" Height="50" >
+                            <Button Width="50" Height="50">
                                 <Button.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem 

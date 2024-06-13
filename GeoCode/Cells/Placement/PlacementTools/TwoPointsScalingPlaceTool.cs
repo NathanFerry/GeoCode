@@ -4,7 +4,6 @@ using Bentley.GeometryNET;
 
 namespace GeoCode.Cells.Placement.PlacementTools;
 
-//TODO: Various special case to handle 
 public class TwoPointsScalingPlaceTool : DgnPrimitiveTool
 {
     private readonly SharedCellDefinitionElement _cellDefinition;
@@ -18,7 +17,7 @@ public class TwoPointsScalingPlaceTool : DgnPrimitiveTool
     }
 
     protected override bool OnDataButton(DgnButtonEvent ev)
-    {
+    {  
         if (!DynamicsStarted)
         {
             BeginDynamics();
