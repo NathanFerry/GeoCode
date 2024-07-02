@@ -1,11 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
 namespace GeoCode.Cells.Placement
 {
+    /// <summary>
+    /// Type of placement for a cellule.
+    /// The point of this class is to "replicate" an Enum.
+    /// C# default Enum uses int to represent values but in this case, strings where optimal.
+    /// This is an implementation of an "Enum like" class using string as value.
+    /// </summary>
      public class PlacementTypeElement
     {
         [JsonProperty]
@@ -16,7 +21,7 @@ namespace GeoCode.Cells.Placement
         public static PlacementTypeElement OnePoint() => new("1 Point");
         public static PlacementTypeElement TwoPointsScaling() => new("2 Points - Mise à l'échelle");
         public static PlacementTypeElement TwoPointsRotationScaling() => new("2 Points - Rotation - Mise à l'échelle");
-        public static PlacementTypeElement ThreePointRotationScaling() => new("3 Points - Rotation - Mise à l'échelle");
+        public static PlacementTypeElement ThreePointsRotationScaling() => new("3 Points - Rotation - Mise à l'échelle");
 
         public static PlacementTypeElement FromString(string placementType)
         {
@@ -30,6 +35,8 @@ namespace GeoCode.Cells.Placement
         
         public static IEnumerable<PlacementTypeElement> GetAllPlacementTypes()
         {
+            // Using reflection to get a list of all the Placement types.
+            // This means you don't have to update anything when you add a new one.
             return typeof(PlacementTypeElement).GetMethods().Where(it => it.IsStatic && it.ReturnType == typeof(PlacementTypeElement) && !it.GetParameters().Any())
                 .Select(it => (PlacementTypeElement)it.Invoke(null, null)).ToList();
         }

@@ -1,8 +1,6 @@
-﻿using System;
-using Bentley.DgnPlatformNET;
+﻿using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
-using Bentley.GeometryNET.Basic;
 using GeoCode.Utils;
 
 namespace GeoCode.Cells.Placement.PlacementTools;

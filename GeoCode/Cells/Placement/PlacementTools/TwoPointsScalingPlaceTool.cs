@@ -1,11 +1,9 @@
-﻿using System;
-using Bentley.DgnPlatformNET;
+﻿using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
 
 namespace GeoCode.Cells.Placement.PlacementTools;
 
-//TODO: Various special case to handle 
 public class TwoPointsScalingPlaceTool : DgnPrimitiveTool
 {
     private readonly SharedCellDefinitionElement _cellDefinition;
@@ -19,7 +17,7 @@ public class TwoPointsScalingPlaceTool : DgnPrimitiveTool
     }
 
     protected override bool OnDataButton(DgnButtonEvent ev)
-    {
+    {  
         if (!DynamicsStarted)
         {
             BeginDynamics();
@@ -35,6 +33,7 @@ public class TwoPointsScalingPlaceTool : DgnPrimitiveTool
 
         _cellElement.AddToModel();
         CellPlacement.PlaceTopoPoint(ev);
+        OnRestartTool();
         return true;
     }
     
@@ -44,15 +43,12 @@ public class TwoPointsScalingPlaceTool : DgnPrimitiveTool
         {
             _cellElement.GetSnapOrigin(out var origin);
             _cellElement.ApplyTransform(new TransformInfo(DTransform3d.FromTranslation(ev.Point - origin)));
-
-            _cellElement.CalcElementRange(out var range);
-            _cellElement.ApplyTransform(
-                new TransformInfo(DTransform3d.FromTranslation(-range.XSize / 2, -range.YSize / 2, 0)));
         }
         else
         {
+            var factor = _center.Value.DistanceXY(ev.Point) / (SharedCellHelper.ComputeWidth(_cellElement) / 2);
             _cellElement.ApplyTransform(new TransformInfo(
-                DTransform3d.FromUniformScaleAndFixedPoint(_center.Value, _center.Value.DistanceXY(ev.Point))));
+                DTransform3d.FromUniformScaleAndFixedPoint(_center.Value, factor)));
         }
         
         var redraw = new RedrawElems();

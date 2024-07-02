@@ -10,6 +10,19 @@ using Newtonsoft.Json;
 
 namespace GeoCode.Model;
 
+#region Documentation
+
+/*
+|   This model is used to represent a category of cells
+|   and to easily save it, by serializing the class to a JSON object.
+|
+|   It implement INotifyPropertyChanged to update the UI when values change.
+|   Please refer to WPF documentation as this is not part of the Bentley SDK
+|   so you can find many articles and posts to help you.
+*/
+
+#endregion
+
 public sealed class Category : INotifyPropertyChanged
 {
     private string _name;
@@ -36,6 +49,8 @@ public sealed class Category : INotifyPropertyChanged
         }
     }
     
+    // This is used to execute the command when a button is clicked, with the category's properties.
+    // The JsonIgnore is here to not serialize the property.
     [JsonIgnore]
     public ICommand Focus { get; }
 

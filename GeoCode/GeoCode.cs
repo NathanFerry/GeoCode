@@ -3,19 +3,14 @@
 |
 |   Main entry class establishing a connection to the MicroStation host.
 |
+|   Addin originally created by Nathan Ferry and Enzo Bertel.
+|   Some documentation will be dispatched to help you understand either the code or Microstation's SDK.
+|
 +--------------------------------------------------------------------------------------*/
 
 using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Documents;
 using Bentley.MstnPlatformNET;
-using GeoCode.Cells.Placement;
 using GeoCode.Model;
-using Newtonsoft.Json;
-using GeoCode.Cells;
-using GeoCode.Saving;
-using GeoCode.UI;
 
 namespace GeoCode
 {
@@ -25,7 +20,7 @@ namespace GeoCode
         public static GeoCode Addin = null;
         public static Application Application;
 
-        private GeoCode(System.IntPtr mdlDesc) : base(mdlDesc)
+        private GeoCode(IntPtr mdlDesc) : base(mdlDesc)
         {
             Addin = this;
         }
@@ -56,7 +51,7 @@ namespace GeoCode
         private void GeoCode_ReloadEvent(AddIn sender, ReloadEventArgs eventArgs)
         {
             var message = "Reloaded " + eventArgs.CommandLine[0];
-            Bentley.MstnPlatformNET.MessageCenter.Instance.ShowInfoMessage(message, "", false);
+            MessageCenter.Instance.ShowInfoMessage(message, "", false);
         }
 
         /// <summary>
@@ -67,16 +62,7 @@ namespace GeoCode
         private void GeoCode_UnloadedEvent(AddIn sender, UnloadedEventArgs eventArgs)
         {
             var message = "Unloaded [Reason : " + eventArgs.UnloadKind + "]";
-            Bentley.MstnPlatformNET.MessageCenter.Instance.ShowInfoMessage(message, "", false);
-        }
-
-        /// <summary>
-        /// Handles MDL ONUNLOAD requests when the application is being unloaded.
-        /// </summary>
-        /// <param name="eventArgs"></param>
-        protected override void OnUnloading(UnloadingEventArgs eventArgs)
-        {
-            base.OnUnloading(eventArgs);
+            MessageCenter.Instance.ShowInfoMessage(message, "", false);
         }
         
         internal static GeoCode Instance()

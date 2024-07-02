@@ -1,16 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using System.Windows;
 using System.Windows.Input;
-using Bentley.MstnPlatformNET;
 using Bentley.UI.Mvvm;
 using GeoCode.Cells.Placement;
 using GeoCode.Saving;
 using GeoCode.UI;
 using Newtonsoft.Json;
+
+#region Documentation
+
+/*
+|   This model is used to represent a cell and to easily save it,
+|   by serializing the class to a JSON object.
+|
+|   It implement INotifyPropertyChanged to update the UI when values change.
+|   Please refer to WPF documentation as this is not part of the Bentley SDK
+|   so you can find many articles and posts to help you.
+*/
+
+#endregion
 
 namespace GeoCode.Model
 {
@@ -49,6 +58,8 @@ namespace GeoCode.Model
             }
         }
 
+        // This is used to execute the command when a button is clicked, with the cell's properties.
+        // The JsonIgnore is here to not serialize the property.
         [JsonIgnore]
         public ICommand PlaceCommand { get; }
         public ICommand CopyCommand { get; }
