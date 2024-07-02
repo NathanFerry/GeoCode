@@ -22,8 +22,12 @@ namespace GeoCode.UI
 {
     public partial class AddElement : UserControl
     {
-        public AddElement()
+        private bool add = true;
+        private Cell c = null;
+        public AddElement(bool add = true,Cell c = null)
         {
+            this.add = add;
+            this.c = c;
             InitializeComponent(); 
             CellSelection.ItemsSource = Session.Instance.GetActiveDgnFile().GetNamedSharedCellDefinitions()
                 .Select(it => it.CellName);
@@ -34,12 +38,24 @@ namespace GeoCode.UI
 
         private void AddElementButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ((ObservableCollection<Cell>)((ElementSelector)ElementSelector.ElementSelectorDockableWindow.Content).CellControl.ItemsSource).Add(new Cell
+            if (add) {
+                ((ObservableCollection<Cell>)((ElementSelector)ElementSelector.ElementSelectorDockableWindow.Content).CellControl.ItemsSource).Add(new Cell
+                {
+                    Name = CellSelection.SelectedItem.ToString(),
+                    Level = LevelSelection.SelectedItem.ToString(),
+                    Placement = PlacementTypeElement.FromString(PlacementSelection.SelectedItem.ToString())
+                });
+            }
+            else
             {
-                Name = CellSelection.SelectedItem.ToString(),
-                Level = LevelSelection.SelectedItem.ToString(),
-                Placement = PlacementTypeElement.FromString(PlacementSelection.SelectedItem.ToString())
-            });
+                var index = ((ObservableCollection<Cell>)((ElementSelector)ElementSelector.ElementSelectorDockableWindow.Content).CellControl.ItemsSource).IndexOf(c);
+                ((ObservableCollection<Cell>)((ElementSelector)ElementSelector.ElementSelectorDockableWindow.Content).CellControl.ItemsSource)[index] = (new Cell
+                {
+                    Name = CellSelection.SelectedItem.ToString(),
+                    Level = LevelSelection.SelectedItem.ToString(),
+                    Placement = PlacementTypeElement.FromString(PlacementSelection.SelectedItem.ToString())
+                });
+            }
         }
 
         private void PasteButton_OnClick(object sender, RoutedEventArgs e)

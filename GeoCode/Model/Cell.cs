@@ -9,6 +9,7 @@ using Bentley.MstnPlatformNET;
 using Bentley.UI.Mvvm;
 using GeoCode.Cells.Placement;
 using GeoCode.Saving;
+using GeoCode.UI;
 using Newtonsoft.Json;
 
 namespace GeoCode.Model
@@ -66,6 +67,12 @@ namespace GeoCode.Model
         private void CopyMethod()
         {
             SavedCellToPaste.Copy(this);
+        }
+
+        private void UpdateMethod()
+        {
+            var el = new AddElement(false,this);
+            el.
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
