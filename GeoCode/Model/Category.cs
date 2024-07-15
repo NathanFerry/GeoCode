@@ -48,7 +48,19 @@ public sealed class Category : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-    
+
+    private ObservableCollection<Linear> _linears;
+
+    public ObservableCollection<Linear> Linears
+    {
+        get => _linears;
+        set
+        {
+            _linears = value;
+            OnPropertyChanged();
+        }
+    }
+
     // This is used to execute the command when a button is clicked, with the category's properties.
     // The JsonIgnore is here to not serialize the property.
     [JsonIgnore]
@@ -66,6 +78,11 @@ public sealed class Category : INotifyPropertyChanged
             new CellViewModel
             {
                 Cells = this.Cells
+            };
+        ((ElementSelector)ElementSelector.ElementSelectorDockableWindow.Content).LinearControl.DataContext =
+            new LinearViewModel
+            {
+                Linears = this.Linears
             };
     }
     

@@ -16,6 +16,7 @@ using System.Windows.Controls;
 using Bentley.DgnPlatformNET;
 using Bentley.MstnPlatformNET.WPF;
 using Bentley.Windowing;
+using GeoCode.Utils;
 
 #endregion
 
@@ -30,15 +31,19 @@ namespace GeoCode.UI
         {
             if (null != SettingsDockableWindow)
             {
+                Log.Write("Settings Window existe déjà. Focus");
                 SettingsDockableWindow.Focus();
                 return;
             }
 
+            Log.Write("Création Settings Window");
+
             SettingsDockableWindow = new DockableWindow();
+            SettingsDockableWindow.Title = "Geocode paramètres";
             SettingsDockableWindow.Content = new Settings();
             SettingsDockableWindow.Attach(GeoCode.Addin, "control", new System.Drawing.Size(Convert.ToInt32(SettingsDockableWindow.MinWidth),
                         Convert.ToInt32(SettingsDockableWindow.MinHeight)));
-            SettingsDockableWindow.WindowContent.CanDockVertically = false;
+            SettingsDockableWindow.WindowContent.CanDockVertically = true;
             SettingsDockableWindow.WindowContent.ContentCloseQuery += new ContentCloseEventHandler(OnClose);
         }
 

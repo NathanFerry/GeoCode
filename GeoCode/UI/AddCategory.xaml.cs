@@ -46,6 +46,7 @@ namespace GeoCode.UI
         {
             var category = new Category
             {
+                Linears = new ObservableCollection<Linear>(),
                 Cells = new ObservableCollection<Cell>(),
                 Name = NameTextBox.Text
             };

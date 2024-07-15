@@ -9,8 +9,15 @@
 +--------------------------------------------------------------------------------------*/
 
 using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using Bentley.DgnPlatformNET;
 using Bentley.MstnPlatformNET;
+using Bentley.MstnPlatformNET.InteropServices;
 using GeoCode.Model;
+using GeoCode.Utils;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace GeoCode
 {
@@ -19,6 +26,11 @@ namespace GeoCode
     {
         public static GeoCode Addin = null;
         public static Application Application;
+
+        private static readonly DirectoryInfo DirectoryInfo =
+       new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.CreateSubdirectory("GeoCode");
+
+        private static readonly string CellLibraryFilePath = DirectoryInfo.FullName + Path.DirectorySeparatorChar + "cellules_GEO_V2.cel";
 
         private GeoCode(IntPtr mdlDesc) : base(mdlDesc)
         {
@@ -36,7 +48,11 @@ namespace GeoCode
             // Register event handlers
             Addin.ReloadEvent += GeoCode_ReloadEvent;
             Addin.UnloadedEvent += GeoCode_UnloadedEvent;
-            
+
+
+            if (!DgnHelper.LoadOtherDgnFile(CellLibraryFilePath)) { Log.Write("DGN non chargé"); };
+
+            //========================================
             // Open user interface
             Session.Instance.Keyin("GeoCode Interface Show");
             
@@ -50,6 +66,7 @@ namespace GeoCode
         /// <param name="eventArgs"></param>
         private void GeoCode_ReloadEvent(AddIn sender, ReloadEventArgs eventArgs)
         {
+            
             var message = "Reloaded " + eventArgs.CommandLine[0];
             MessageCenter.Instance.ShowInfoMessage(message, "", false);
         }

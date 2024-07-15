@@ -4,33 +4,40 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="130" d:DesignWidth="230" >
-    <Grid>
+             d:DesignHeight="300" d:DesignWidth="300" >
+    <Grid Margin="0,0,-5,-33">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Label Width="70" HorizontalAlignment="Center">Cellule</Label>
-            <StackPanel Width="150">
-                <ComboBox Name="CellSelection" IsEditable="True" IsTextSearchEnabled="True"/>
+            <Label Width="70" HorizontalAlignment="Center">Libellé</Label>
+            <StackPanel VerticalAlignment="Center" Width="150">
+                <TextBox  Name="CellLabel"/>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label Width="70" HorizontalAlignment="Center">Cellule</Label>
+            <StackPanel Width="150">
+                <ComboBox Name="CellSelection" IsEditable="True"  IsTextSearchEnabled="True"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
             <Label Width="70" HorizontalAlignment="Center"> Niveau </Label>
             <StackPanel Width="150">
                 <ComboBox Name="LevelSelection" IsEditable="True" IsTextSearchEnabled="True"/>
             </StackPanel>
         </StackPanel>
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
             <Label Width="70" HorizontalAlignment="Center"> Placement </Label>
             <StackPanel Width="150">
                 <ComboBox Name="PlacementSelection" IsEditable="True" IsTextSearchEnabled="True"/>
             </StackPanel>
         </StackPanel>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" >
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" >
             <Button Margin="5"  Name="PasteButton" Grid.Row="3" Width="40" Click="PasteButton_OnClick">
                 <TextBlock>Coller</TextBlock>
         </Button>
@@ -39,7 +46,10 @@
             <Button.Style>
                 <Style TargetType="Button">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Text.Length, ElementName=CellSelection, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                            <DataTrigger Binding="{Binding Text.Length, ElementName=CellLabel, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Text.Length, ElementName=CellSelection, UpdateSourceTrigger=PropertyChanged}" Value="0">
                             <Setter Property="IsEnabled" Value="False"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Text.Length, ElementName=LevelSelection, UpdateSourceTrigger=PropertyChanged}" Value="0">

@@ -34,14 +34,26 @@ namespace GeoCode.UI
                 return;
             }
 
-            AddElementDockableWindow = new DockableWindow();
-            AddElementDockableWindow.Content = new AddElement();
+            AddElementDockableWindow = new DockableWindow
+            {
+                Content = new AddElement()
+            };
             AddElementDockableWindow.Attach(GeoCode.Addin, "control", new System.Drawing.Size(Convert.ToInt32(AddElementDockableWindow.MinWidth),
                         Convert.ToInt32(AddElementDockableWindow.MinHeight)));
             AddElementDockableWindow.WindowContent.CanDockVertically = false;
             AddElementDockableWindow.WindowContent.ContentCloseQuery += new ContentCloseEventHandler(OnClose);
             
             ElementSelector.OwnedWindows.Add(AddElementDockableWindow);
+        }
+
+        internal static void CloseWindow(string unparsed="")
+        {
+            if (null == AddElementDockableWindow)
+            {
+                return;
+            }
+
+            AddElementDockableWindow.Close();
         }
 
         /// <summary>

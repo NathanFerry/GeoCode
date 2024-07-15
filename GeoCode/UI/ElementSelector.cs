@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using Bentley.MstnPlatformNET.WPF;
 using Bentley.Windowing;
 using GeoCode.Saving;
+using GeoCode.Utils;
 
 #region  Documentation
 
@@ -33,15 +34,20 @@ namespace GeoCode.UI
         {
             if (null != ElementSelectorDockableWindow)
             {
+                Log.Write("Element Selector existe déjà. Focus");
                 ElementSelectorDockableWindow.Focus();
                 return;
             }
 
+            Log.Write("Création Element Selector");
+
             ElementSelectorDockableWindow = new DockableWindow();
+            ElementSelectorDockableWindow.Title = "Geocode sélection";
             ElementSelectorDockableWindow.Content = new ElementSelector();
             ElementSelectorDockableWindow.Attach(GeoCode.Addin, "control", new Size(Convert.ToInt32(ElementSelectorDockableWindow.MinWidth),
                         Convert.ToInt32(ElementSelectorDockableWindow.MinHeight)));
             ElementSelectorDockableWindow.WindowContent.ContentCloseQuery += new ContentCloseEventHandler(OnClose);
+
         }
 
         /// <summary>

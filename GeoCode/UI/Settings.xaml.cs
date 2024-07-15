@@ -10,6 +10,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Bentley.MstnPlatformNET;
+using GeoCode.Utils;
 
 #endregion
 
@@ -26,12 +27,14 @@ namespace GeoCode.UI
             InitializeComponent();
                 
             ElementSelector.OwnedWindows.Add(SettingsDockableWindow);
-            PointTopo.Text = GeoCode.Application.PtTopo != null ? GeoCode.Application.PtTopo : "";
-            LevelTopo.Text = GeoCode.Application.LevelTopo != null ? GeoCode.Application.LevelTopo : "";
-            PointTopo.ItemsSource = Session.Instance.GetActiveDgnFile().GetNamedSharedCellDefinitions()
-                .Select(it => it.CellName);
-            LevelTopo.ItemsSource = Session.Instance.GetActiveDgnFile().GetLevelCache().GetHandles()
+            PointTopo.Text = GeoCode.Application.PtTopo ?? "";
+            LevelTopo.Text = GeoCode.Application.LevelTopo ?? "";
+            Log.Write("Tout va bien par ici");
+            PointTopo.ItemsSource = DgnHelper.GetAllSharedCellsFromLibrary().Select(it=>it.CellName);
+            Log.Write("Cellules trouvées");
+            LevelTopo.ItemsSource = DgnHelper.GetAllLevelsFromLibrary()
                 .Select(it => it.Name );
+            Log.Write("Niveaux trouvés");
         }
         private void SaveSettingsButton_OnClick(object sender, RoutedEventArgs e)
         {

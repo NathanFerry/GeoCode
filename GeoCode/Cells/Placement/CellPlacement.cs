@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using Bentley.DgnPlatformNET;
+using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
 using Bentley.MstnPlatformNET;
 using GeoCode.Utils;
@@ -20,9 +22,29 @@ public static class CellPlacement
     
     public static void PlacementTool(string cellName, string cellLevel, PlacementTypeElement placement)
     {
-        var cellDefinition = Session.Instance.GetActiveDgnFile().GetNamedSharedCellDefinitions()
-            .First(element => element.CellName == cellName);
-        var level = Session.Instance.GetActiveDgnFile().GetLevelCache().GetHandles()
+
+        SharedCellDefinitionElement cellDefinition = null;
+            var cells = DgnHelper.GetAllSharedCellsFromLibrary();
+
+            foreach (var cell in cells)
+            {
+                if (cell.CellName == cellName)
+                {
+                    cellDefinition = cell;
+                    break;
+                }
+            }
+           
+
+        cellDefinition ??= Session.Instance.GetActiveDgnFile().GetNamedSharedCellDefinitions().FirstOrDefault(element=> element.CellName == cellName);
+
+        if (cellDefinition == null)
+        {
+            MessageBox.Show("Aucune cellule à ce nom ("+ cellName +") n'a été retrouvée", "Erreur !");
+            return;
+        }
+         
+        var level = DgnHelper.GetAllLevelsFromLibrary()
             .First(element => element.Name == cellLevel);
         new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).Apply(cellDefinition);
         try

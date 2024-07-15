@@ -11,6 +11,7 @@ public static class BentleyExtensionMethods
 {
     public static ElementPropertiesSetter SetLevelChain(this ElementPropertiesSetter eps, LevelId level)
     {
+        
         eps.SetLevel(level);
         return eps;
     }
@@ -18,6 +19,12 @@ public static class BentleyExtensionMethods
     public static ElementPropertiesSetter SetColorChain(this ElementPropertiesSetter eps, uint color)
     {
         eps.SetColor(color);
+        return eps;
+    }
+
+    public static ElementPropertiesSetter SetThicknessChain(this ElementPropertiesSetter eps, double thickness)
+    {
+        eps.SetThickness(thickness,false);
         return eps;
     }
 
