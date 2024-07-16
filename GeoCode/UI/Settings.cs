@@ -31,12 +31,12 @@ namespace GeoCode.UI
         {
             if (null != SettingsDockableWindow)
             {
-                Log.Write("Settings Window existe déjà. Focus");
+              
                 SettingsDockableWindow.Focus();
                 return;
             }
 
-            Log.Write("Création Settings Window");
+           
 
             SettingsDockableWindow = new DockableWindow();
             SettingsDockableWindow.Title = "Geocode paramètres";

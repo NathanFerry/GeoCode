@@ -40,6 +40,16 @@ namespace GeoCode.UI
             AddLinearElementDockableWindow.WindowContent.ContentCloseQuery += new ContentCloseEventHandler(OnClose);
         }
 
+        internal static void CloseWindow(string unparsed = "")
+        {
+            if (null == AddLinearElementDockableWindow)
+            {
+                return;
+            }
+
+            AddLinearElementDockableWindow.Close();
+        }
+
         /// <summary>
         /// Close and dispose the usercontrol.
         /// </summary>

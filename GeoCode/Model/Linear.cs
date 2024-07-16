@@ -4,6 +4,7 @@ using Bentley.UI.Mvvm;
 using GeoCode.Cells.Placement;
 using GeoCode.Saving;
 using GeoCode.UI;
+using GeoCode.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -93,12 +94,22 @@ namespace GeoCode.Model
 
         private void PlacementMethod()
         {
-            var level = Session.Instance.GetActiveDgnFile().GetLevelCache().GetHandles()
-           .First(element => element.Name == Level);
 
+            var level = DgnHelper.GetAllLevelsFromLibrary()
+                .First(element => element.Name == this.Level);
+
+            Session.Instance.Keyin("ACTIVE LEVEL " + level.Name);
+            if (this.Placement == LinearPlacementTypeElement.SimpleLinear())
+            {
+                Session.Instance.Keyin("PLACE SMARTLINE");
+            } else
+            {
+                LinearPlacement.LinearPlacementTool(this, Placement);
+            }
+            
 
             //LineElement line = new LineElement(Session.Instance.GetActiveDgnModel(), Element.,);
-            LinearPlacement.LinearPlacementTool(this,Placement);
+            //
         }
 
         private void CopyMethod()

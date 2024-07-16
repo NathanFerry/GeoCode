@@ -47,7 +47,18 @@ namespace GeoCode.UI
             this.LinearFunction.SelectedItem = LinearPlacementTypeElement.GetAllLinearPlacementTypes().Select(it => it.ToString()).FirstOrDefault();
             this.LinearLabel.Text = "Default";
             this.LevelSelection.ItemsSource = DgnHelper.GetAllLevelsFromLibrary().Select(it => it.Name);
-            this.LevelSelection.SelectedItem = DgnHelper.GetAllLevelsFromLibrary().Select(it => it.Name).FirstOrDefault();  
+            this.LevelSelection.SelectedItem = DgnHelper.GetAllLevelsFromLibrary().Select(it => it.Name).FirstOrDefault(); 
+            
+            if (l!=null)
+            {
+                LinearFunction.SelectedItem = l.Placement.ToString();
+                LevelSelection.SelectedItem = l.Level;
+                LinearLabel.Text = l.Label;
+                if (l.Value.HasValue)
+                {
+                    NumberTextBox.Text = l.Value.Value.ToString();
+                }
+            }
         }
 
         
@@ -75,16 +86,20 @@ namespace GeoCode.UI
                         Label = this.LinearLabel.Text,
                         Placement = LinearPlacementTypeElement.FromString(LinearFunction.SelectedItem.ToString()),
                         Level = LevelSelection.SelectedItem.ToString(),
-                        Value = value == -1.0 ? null : value
+                        Value = value
                     });
                 } catch(Exception ex)
                 {
-                    Log.Write("<<<Erreur d'ajout de Linéaire>>> "+ex.ToString());
+                    Log.Write("<<<Erreur d'ajout de Linéaire>>> "+ex.ToString()
+                        +"\n"+this.LinearLabel.Text
+                        +"\n"+this.LinearFunction.SelectedItem.ToString()
+                        +"\n"+this.LevelSelection.SelectedItem.ToString()
+                        +"\n"+value);
                     MessageBox.Show("Le linéaire n'a pas pu être ajouté. Vérifiez que vous avez sélectionné un onglet.",
                           "Erreur d'ajout linéaire",
                           MessageBoxButton.OK,
                           MessageBoxImage.Error);
-                        }
+                }
 
                 Log.Write("Linéaire ajouté de manière efficace");
             }
@@ -96,7 +111,7 @@ namespace GeoCode.UI
                 l.Value = value;
 
             }
-            AddElement.CloseWindow();
+            AddLinearElement.CloseWindow();
         }
 
         private void LinearFunction_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -106,15 +121,15 @@ namespace GeoCode.UI
             switch (itemSelected)
             {
                 case "Linéaire simple":
-                    labelLongueur.Tag = "";
+                    labelLongueur.Content = "";
                     this.NumberTextBox.IsEnabled = false;
                     break;
                 case "Linéaire avec décalage":
-                    labelLongueur.Tag = "Epaisseur";
+                    labelLongueur.Content = "Epaisseur";
                     this.NumberTextBox.IsEnabled = true;
                     break;
                 case "Linéaire avec fuyante":
-                    labelLongueur.Tag = "Longueur fuyante";
+                    labelLongueur.Content = "Longueur fuyante";
                     this.NumberTextBox.IsEnabled = true;
                     break;
             }

@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModel="clr-namespace:GeoCode.ViewModel"
              mc:Ignorable="d"
-             MinWidth="300" MinHeight="300"
-             d:DesignHeight="300" d:DesignWidth="300">
+             MinWidth="500" MinHeight="500"
+             d:DesignHeight="650" d:DesignWidth="650">
     <DockPanel >
         <Grid Name="SettingBar" DockPanel.Dock="Top" Height="50">
             <Grid.ColumnDefinitions>
@@ -43,7 +43,7 @@
                     <Image Source="Pictures/plus.png" />
                 </Button>
             </Grid>
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer Width="250"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <ScrollViewer.ContextMenu>
                     <ContextMenu>
                         <MenuItem 
@@ -99,7 +99,7 @@
                 </ItemsControl>
                 
             </ScrollViewer>
-            <ScrollViewer  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <ScrollViewer Width="250"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <ScrollViewer.ContextMenu>
                     <ContextMenu>
                         <MenuItem 

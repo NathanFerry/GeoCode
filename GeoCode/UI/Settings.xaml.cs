@@ -29,12 +29,13 @@ namespace GeoCode.UI
             ElementSelector.OwnedWindows.Add(SettingsDockableWindow);
             PointTopo.Text = GeoCode.Application.PtTopo ?? "";
             LevelTopo.Text = GeoCode.Application.LevelTopo ?? "";
-            Log.Write("Tout va bien par ici");
-            PointTopo.ItemsSource = DgnHelper.GetAllSharedCellsFromLibrary().Select(it=>it.CellName);
-            Log.Write("Cellules trouvées");
+            
+            PointTopo.ItemsSource = DgnHelper.GetAllSharedCellsFromLibrary()
+                .Select(it => it.CellName);
+      
             LevelTopo.ItemsSource = DgnHelper.GetAllLevelsFromLibrary()
                 .Select(it => it.Name );
-            Log.Write("Niveaux trouvés");
+         
         }
         private void SaveSettingsButton_OnClick(object sender, RoutedEventArgs e)
         {

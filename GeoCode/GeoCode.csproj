@@ -146,6 +146,7 @@
     <Compile Include="Cells\Placement\LinearPlacement.cs" />
     <Compile Include="Cells\Placement\CellPlacement.cs" />
     <Compile Include="Cells\Placement\LinearPlacementTools\SimpleLinearPlaceTool.cs" />
+    <Compile Include="Cells\Placement\LinearPlacementTools\ThickLinearPlaceTool.cs" />
     <Compile Include="Cells\Placement\PlacementTools\OnePointPlaceTool.cs" />
     <Compile Include="Cells\Placement\PlacementTools\OnePointRotationPlaceTool.cs" />
     <Compile Include="Cells\Placement\PlacementTools\ThreePointRotationScalingPlaceTool.cs" />

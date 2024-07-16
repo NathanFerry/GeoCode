@@ -22,9 +22,9 @@ public static class BentleyExtensionMethods
         return eps;
     }
 
-    public static ElementPropertiesSetter SetThicknessChain(this ElementPropertiesSetter eps, double thickness)
+    public static ElementPropertiesSetter SetLineStyleChain(this ElementPropertiesSetter eps,LevelDefinitionLineStyle style)
     {
-        eps.SetThickness(thickness,false);
+        eps.SetLinestyle(0,style.GetStyleParams());
         return eps;
     }
 

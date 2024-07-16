@@ -23,6 +23,8 @@ namespace GeoCode.Utils
         {
             DgnDocument dgnDocumentObj = DgnDocument.CreateForLocalFile(path);
 
+            
+
             DgnFileOwner DgnFileOwnerObj = DgnFile.Create(dgnDocumentObj, DgnFileOpenMode.PreferableReadWrite);
 
             var OtherDGNFile = DgnFileOwnerObj.DgnFile;

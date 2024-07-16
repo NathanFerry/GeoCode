@@ -30,7 +30,7 @@ namespace GeoCode
         private static readonly DirectoryInfo DirectoryInfo =
        new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.CreateSubdirectory("GeoCode");
 
-        private static readonly string CellLibraryFilePath = DirectoryInfo.FullName + Path.DirectorySeparatorChar + "cellules_GEO_V2.cel";
+        private static readonly string CellLibraryFilePath = DirectoryInfo.FullName + Path.DirectorySeparatorChar + "GEO.dgnlib";
 
         private GeoCode(IntPtr mdlDesc) : base(mdlDesc)
         {

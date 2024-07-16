@@ -29,12 +29,13 @@ public static class LinearPlacement
             //Using reflection to invoke InstallNewInstance method of tools. Placement tool must be named following this pattern:
             //<Placement Type>PlaceTool.
             var typeName =  "GeoCode.Cells.Placement.LinearPlacementTools." + MethodNameDictionary[placement.Value] + "PlaceTool";
+            Log.Write(typeName);
             Assembly.GetExecutingAssembly().GetType(typeName).GetMethod("InstallNewInstance")
                 .Invoke(null, new[] { linear, });
         }
         catch (Exception e)
         {
-            Log.Write(e.Message);
+            Log.Write(e.ToString());
         }
     }
 }

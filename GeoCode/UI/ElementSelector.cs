@@ -34,12 +34,11 @@ namespace GeoCode.UI
         {
             if (null != ElementSelectorDockableWindow)
             {
-                Log.Write("Element Selector existe déjà. Focus");
+                
                 ElementSelectorDockableWindow.Focus();
                 return;
             }
 
-            Log.Write("Création Element Selector");
 
             ElementSelectorDockableWindow = new DockableWindow();
             ElementSelectorDockableWindow.Title = "Geocode sélection";

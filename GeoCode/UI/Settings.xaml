@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:GeoCode.UI"
              xmlns:bentleywpf="clr-namespace:Bentley.UI.Vendor.Wpf;assembly=Bentley.UI.Vendor.Wpf"
              mc:Ignorable="d"
-             MinWidth="250" MinHeight="150"
+             MinWidth="300" MinHeight="300"
            
-             d:DesignHeight="150" d:DesignWidth="250" >
+             d:DesignHeight="300" d:DesignWidth="300" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
