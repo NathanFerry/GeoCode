@@ -224,45 +224,77 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             return new DPoint3d(x, y, z);
         }
 
-        public DPoint3d GetPointOnBisector(DPoint3d A, DPoint3d B,DPoint3d C, double distance) 
+        public DPoint3d GetPointOnBisector(DPoint3d A, DPoint3d B, DPoint3d C, double distance)
         {
-            // Dénominateur commun des calculs en X et en Y 
+            // Calculez les distances des points A et C à B
+            var distBA = Math.Sqrt(Math.Pow(A.X - B.X, 2) + Math.Pow(A.Y - B.Y, 2));
+            var distBC = Math.Sqrt(Math.Pow(C.X - B.X, 2) + Math.Pow(C.Y - B.Y, 2));
 
+            // Vérifiez si les distances sont non nulles pour éviter la division par zéro
+            if (distBA == 0 || distBC == 0)
+            {
+                throw new ArgumentException("Les points A et C ne doivent pas coïncider avec le point B.");
+            }
 
-            var distBA = Math.Sqrt(Math.Pow(A.Y - B.Y, 2) + Math.Pow(A.X - B.X, 2));
-            var distBC = Math.Sqrt(Math.Pow(C.Y - B.Y, 2) + Math.Pow(C.X - B.X, 2));
+            // Normalisez les vecteurs BA et BC
+            var unitBA_X = (A.X - B.X) / distBA;
+            var unitBA_Y = (A.Y - B.Y) / distBA;
+            var unitBC_X = (C.X - B.X) / distBC;
+            var unitBC_Y = (C.Y - B.Y) / distBC;
 
-            var qX = distBC * ((A.X - B.X) / distBA);
-                qX += distBA * ((C.X - B.X) / distBC);
-            var qY = distBC * ((A.Y - B.Y) / distBA);
-                qY += distBA * ((C.Y - B.Y) / distBC);
+            // Calculez les coordonnées de la bissectrice
+            var bisectorX = unitBA_X + unitBC_X;
+            var bisectorY = unitBA_Y + unitBC_Y;
 
-            var denominator = Math.Sqrt(Math.Pow(qX, 2) + Math.Pow(qY, 2));
+            // Normalisez le vecteur de la bissectrice
+            var bisectorLength = Math.Sqrt(bisectorX * bisectorX + bisectorY * bisectorY);
+            if (bisectorLength == 0)
+            {
+                throw new InvalidOperationException("La bissectrice est indéfinie.");
+            }
 
-            var x = B.X + (distance) * (qX / denominator);
-            var y = B.Y + (distance) * (qY / denominator);
-            var z = B.Z;
+            // Calculez les coordonnées de D
+            var x = B.X + (distance) * (bisectorX / bisectorLength);
+            var y = B.Y + (distance) * (bisectorY / bisectorLength);
+            var z = B.Z; // Conservez la coordonnée Z de B
+
             return new DPoint3d(x, y, z);
         }
 
         public DPoint3d GetPointUnderBisector(DPoint3d A, DPoint3d B, DPoint3d C, double distance)
         {
-            // Dénominateur commun des calculs en X et en Y 
-            
-                
-            var distBA = Math.Sqrt(Math.Pow(A.Y - B.Y, 2) + Math.Pow(A.X - B.X, 2));
-            var distBC = Math.Sqrt(Math.Pow(C.Y - B.Y, 2) + Math.Pow(C.X - B.X, 2));
+            // Calculez les distances des points A et C à B
+            var distBA = Math.Sqrt(Math.Pow(A.X - B.X, 2) + Math.Pow(A.Y - B.Y, 2));
+            var distBC = Math.Sqrt(Math.Pow(C.X - B.X, 2) + Math.Pow(C.Y - B.Y, 2));
 
-            var qX  = distBC * ((A.X - B.X) / distBA);
-                qX += distBA * ((C.X - B.X) / distBC);
-            var qY  = distBC * ((A.Y - B.Y) / distBA);
-                qY += distBA * ((C.Y - B.Y) / distBC);
+            // Vérifiez si les distances sont non nulles pour éviter la division par zéro
+            if (distBA == 0 || distBC == 0)
+            {
+                throw new ArgumentException("Les points A et C ne doivent pas coïncider avec le point B.");
+            }
 
-            var denominator = Math.Sqrt(Math.Pow(qX, 2) + Math.Pow(qY, 2));
+            // Normalisez les vecteurs BA et BC
+            var unitBA_X = (A.X - B.X) / distBA;
+            var unitBA_Y = (A.Y - B.Y) / distBA;
+            var unitBC_X = (C.X - B.X) / distBC;
+            var unitBC_Y = (C.Y - B.Y) / distBC;
 
-            var x = B.X + (-distance) * (qX / denominator);
-            var y = B.Y + (-distance) * (qY / denominator);
-            var z = B.Z;
+            // Calculez les coordonnées de la bissectrice
+            var bisectorX = unitBA_X + unitBC_X;
+            var bisectorY = unitBA_Y + unitBC_Y;
+
+            // Normalisez le vecteur de la bissectrice
+            var bisectorLength = Math.Sqrt(bisectorX * bisectorX + bisectorY * bisectorY);
+            if (bisectorLength == 0)
+            {
+                throw new InvalidOperationException("La bissectrice est indéfinie.");
+            }
+
+            // Calculez les coordonnées de D
+            var x = B.X + (-distance) * (bisectorX / bisectorLength);
+            var y = B.Y + (-distance) * (bisectorY / bisectorLength);
+            var z = B.Z; // Conservez la coordonnée Z de B
+
             return new DPoint3d(x, y, z);
         }
         #endregion
