@@ -208,18 +208,70 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
 
         public DPoint3d GetPointOnSegment(DPoint3d A, DPoint3d B, double distance)
         {
-            var x = A.X - distance * (-(B.Y - A.Y) / (Math.Sqrt(Math.Pow(B.Y - A.Y, 2) + Math.Pow(B.X - A.X, 2))));
-            var y = A.Y + distance * ((B.X - A.X) / (Math.Sqrt(Math.Pow(B.Y - A.Y, 2) + Math.Pow(B.X - A.X, 2))));
-            var z = A.Z;
+            
+                // Calculez le vecteur AB
+                var AB_X = B.X - A.X;
+                var AB_Y = B.Y - A.Y;
 
-            return new DPoint3d(x, y, z);
+                // Calculez la longueur du vecteur AB
+                var AB_length = Math.Sqrt(AB_X * AB_X + AB_Y * AB_Y);
+
+                // Vérifiez si la longueur de AB est non nulle pour éviter la division par zéro
+                if (AB_length == 0)
+                {
+                    throw new ArgumentException("Les points A et B ne doivent pas coïncider.");
+                }
+
+                // Calculez le vecteur perpendiculaire à AB
+                var perp_X = -AB_Y;
+                var perp_Y = AB_X;
+
+                // Normalisez le vecteur perpendiculaire
+                var perp_length = Math.Sqrt(perp_X * perp_X + perp_Y * perp_Y);
+                if (perp_length == 0)
+                {
+                    throw new InvalidOperationException("Le vecteur perpendiculaire est indéfini.");
+                }
+
+                // Calculez les coordonnées de C
+                var x = A.X + (distance) * (perp_X / perp_length);
+                var y = A.Y + (distance) * (perp_Y / perp_length);
+                var z = A.Z; // Conservez la coordonnée Z de A
+
+                return new DPoint3d(x, y, z);
+            
         }
 
         public DPoint3d GetPointUnderSegment(DPoint3d A, DPoint3d B, double distance)
         {
-            var x = A.X - (-distance) * (-(B.Y - A.Y) / (Math.Sqrt(Math.Pow(B.Y - A.Y, 2) + Math.Pow(B.X - A.X, 2))));
-            var y = A.Y + (-distance) * ((B.X - A.X) / (Math.Sqrt(Math.Pow(B.Y - A.Y, 2) + Math.Pow(B.X - A.X, 2))));
-            var z = A.Z;
+            // Calculez le vecteur AB
+            var AB_X = B.X - A.X;
+            var AB_Y = B.Y - A.Y;
+
+            // Calculez la longueur du vecteur AB
+            var AB_length = Math.Sqrt(AB_X * AB_X + AB_Y * AB_Y);
+
+            // Vérifiez si la longueur de AB est non nulle pour éviter la division par zéro
+            if (AB_length == 0)
+            {
+                throw new ArgumentException("Les points A et B ne doivent pas coïncider.");
+            }
+
+            // Calculez le vecteur perpendiculaire à AB
+            var perp_X = -AB_Y;
+            var perp_Y = AB_X;
+
+            // Normalisez le vecteur perpendiculaire
+            var perp_length = Math.Sqrt(perp_X * perp_X + perp_Y * perp_Y);
+            if (perp_length == 0)
+            {
+                throw new InvalidOperationException("Le vecteur perpendiculaire est indéfini.");
+            }
+
+            // Calculez les coordonnées de C
+            var x = A.X + (-distance) * (perp_X / perp_length);
+            var y = A.Y + (-distance) * (perp_Y / perp_length);
+            var z = A.Z; // Conservez la coordonnée Z de A
 
             return new DPoint3d(x, y, z);
         }
