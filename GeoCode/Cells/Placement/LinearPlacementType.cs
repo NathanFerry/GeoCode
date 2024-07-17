@@ -31,7 +31,6 @@ namespace GeoCode.Cells.Placement
                 
                 throw new InvalidOperationException($@"{placementType} is not a valid value for Enum {typeof(LinearPlacementTypeElement)}");
             }
-            Log.Write("Ici");
             return new LinearPlacementTypeElement(placementType);
         }
         

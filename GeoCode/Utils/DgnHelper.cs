@@ -1,14 +1,7 @@
 ﻿using Bentley.DgnPlatformNET;
-using Bentley.DgnPlatformNET.Elements;
-using Bentley.Interop.MicroStationDGN;
 using Bentley.MstnPlatformNET;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using SharedCellDefinitionElement = Bentley.DgnPlatformNET.Elements.SharedCellDefinitionElement;
 
 namespace GeoCode.Utils
@@ -17,7 +10,9 @@ namespace GeoCode.Utils
     {
        
 
-        private static DgnFile otherFile;
+        private static List<DgnFile> otherFiles = new List<DgnFile>();
+        private static List<LevelHandle> levelHandles = new List<LevelHandle>();
+        private static List<SharedCellDefinitionElement> listCells = new List<SharedCellDefinitionElement>();
 
         public static bool LoadOtherDgnFile(string path)
         {
@@ -33,7 +28,29 @@ namespace GeoCode.Utils
 
             if (status == StatusInt.Success)
             {
-                otherFile = OtherDGNFile;
+                otherFiles.Add(OtherDGNFile);
+
+                // Ajoute les niveaux du fichier à charger
+                levelHandles.AddRange(OtherDGNFile.GetLevelCache().GetHandles());
+                foreach (var level in OtherDGNFile.GetLevelCache().GetHandles())
+                {
+                    try
+                    {
+                        Session.Instance.GetActiveDgnFile().GetLevelCache().CopyLevel(level);
+                    }
+                    catch
+                    {
+                        Log.Write("Impossible de copier le level " + level.Name);
+                    }
+                }
+
+                // Ajoute les cellules du fichier à charger
+                listCells.AddRange(OtherDGNFile.GetNamedSharedCellDefinitions());
+                foreach (var cell in OtherDGNFile.GetNamedSharedCellDefinitions())
+                {
+                    cell.AddChildComplete();
+                }
+
                 return true;
             } else
             {
@@ -42,30 +59,18 @@ namespace GeoCode.Utils
         }
         public static IEnumerable<LevelHandle> GetAllLevelsFromLibrary()
         {
-            
 
-            if (otherFile != null)
-            {
-                return otherFile.GetLevelCache().GetHandles().Concat(
+            return levelHandles.Concat(
                     Session.Instance.GetActiveDgnFile().GetLevelCache().GetHandles()
                     ).Distinct();
-            } else
-            {
-                return Session.Instance.GetActiveDgnFile().GetLevelCache().GetHandles();
-            }
         }
         public static IEnumerable<SharedCellDefinitionElement> GetAllSharedCellsFromLibrary()
         {
+            Session.Instance.GetActiveDgnModel().ReadAndLoadDgnAttachments(new DgnAttachmentLoadOptions(true, true, true));
+            
+            return listCells.Concat(Session.Instance.GetActiveDgnFile().GetNamedSharedCellDefinitions());
            
 
-            if (otherFile != null)
-            {
-                return otherFile.GetNamedSharedCellDefinitions().Concat(Session.Instance.GetActiveDgnFile().GetNamedSharedCellDefinitions());
-            }
-            else
-            {
-                return Session.Instance.GetActiveDgnFile().GetNamedSharedCellDefinitions();
-            }
         }
     }
 }

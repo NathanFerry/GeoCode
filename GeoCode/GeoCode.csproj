@@ -67,6 +67,7 @@
       <HintPath>..\..\..\..\..\Program Files\Bentley\MicroStation 2023\MicroStation\Bentley.GeometryNET.Structs.dll</HintPath>
     </Reference>
     <Reference Include="Bentley.MicroStation.Ribbon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4bf6c96a266e58d4, processorArchitecture=AMD64" />
+    <Reference Include="Bentley.Platform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4bf6c96a266e58d4, processorArchitecture=MSIL" />
     <Reference Include="Bentley.RibbonView, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9bfed12b64a9b7df, processorArchitecture=AMD64" />
     <Reference Include="Bentley.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4bf6c96a266e58d4, processorArchitecture=AMD64" />
     <Reference Include="Bentley.UI.Vendor.WPF, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4bf6c96a266e58d4, processorArchitecture=AMD64" />
@@ -145,6 +146,7 @@
   <ItemGroup>
     <Compile Include="Cells\Placement\LinearPlacement.cs" />
     <Compile Include="Cells\Placement\CellPlacement.cs" />
+    <Compile Include="Cells\Placement\LinearPlacementTools\FleeingLinearPlaceTool.cs" />
     <Compile Include="Cells\Placement\LinearPlacementTools\SimpleLinearPlaceTool.cs" />
     <Compile Include="Cells\Placement\LinearPlacementTools\ThickLinearPlaceTool.cs" />
     <Compile Include="Cells\Placement\PlacementTools\OnePointPlaceTool.cs" />

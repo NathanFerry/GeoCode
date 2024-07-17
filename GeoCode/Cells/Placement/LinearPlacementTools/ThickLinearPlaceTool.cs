@@ -75,12 +75,12 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
 
                 if (_previous == _origin)
                 {
-                    listPointsOn.Add(GetPointOnSegment(_previous, ev.Point, _linearElement.Value.Value));
-                    listPointsUnder.Add(GetPointUnderSegment(_previous, ev.Point, _linearElement.Value.Value));
+                    listPointsOn.Add(GetPointOnSegment(_previous, ev.Point, _linearElement.Value.Value * 10000));
+                    listPointsUnder.Add(GetPointUnderSegment(_previous, ev.Point, _linearElement.Value.Value * 10000));
                 } else
                 {
-                    listPointsOn.Add(GetPointOnBisector(listPoints[listPoints.Count-2],_previous, ev.Point, _linearElement.Value.Value));
-                    listPointsUnder.Add(GetPointUnderBisector(listPoints[listPoints.Count - 2], _previous, ev.Point, _linearElement.Value.Value));
+                    listPointsOn.Add(GetPointOnBisector(listPoints[listPoints.Count-2],_previous, ev.Point, _linearElement.Value.Value * 10000));
+                    listPointsUnder.Add(GetPointUnderBisector(listPoints[listPoints.Count - 2], _previous, ev.Point, _linearElement.Value.Value * 10000));
                 }
 
 
@@ -115,6 +115,12 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                     new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).SetLineStyleChain(level.GetByLevelLineStyle()).Apply(_lineElement);
                     _lineElement.AddToModel();
                 }
+
+                foreach (var line in tempLines)
+                {
+                    line.DeleteFromModel();
+                }
+
                 ExitTool();
 
                 return true;
@@ -132,8 +138,8 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
         {
             if (listPoints.Count >= 2)
             {
-                listPointsOn.Add(GetPointUnderSegment(listPoints[listPoints.Count - 1], listPoints[listPoints.Count - 2], _linearElement.Value.Value));
-                listPointsUnder.Add(GetPointOnSegment(listPoints[listPoints.Count - 1], listPoints[listPoints.Count - 2], _linearElement.Value.Value));
+                listPointsOn.Add(GetPointUnderSegment(listPoints[listPoints.Count - 1], listPoints[listPoints.Count - 2], _linearElement.Value.Value * 10000));
+                listPointsUnder.Add(GetPointOnSegment(listPoints[listPoints.Count - 1], listPoints[listPoints.Count - 2], _linearElement.Value.Value * 10000));
             }
 
             listPointsUnder.Reverse();
@@ -150,10 +156,10 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                 var thirdPoint = new DPoint3d();
                 if (_previous != _origin)
                 {
-                    thirdPoint = GetPointOnBisector(listPoints[listPoints.Count - 2], _previous, ev.Point,_linearElement.Value.Value);
+                    thirdPoint = GetPointOnBisector(listPoints[listPoints.Count - 2], _previous, ev.Point,_linearElement.Value.Value * 10000);
                 } else
                 {
-                    thirdPoint = GetPointOnSegment(_previous, ev.Point, _linearElement.Value.Value);
+                    thirdPoint = GetPointOnSegment(_previous, ev.Point, _linearElement.Value.Value * 10000);
                 }
                 var redraw = new RedrawElems();
                 redraw.SetDynamicsViewsFromActiveViewSet(ev.Viewport);
@@ -195,10 +201,6 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             return true;
         }
 
-        protected override void OnPostInstall()
-        {
-            base.OnPostInstall();
-        }
 
         public static void InstallNewInstance(Linear linear)
         {
@@ -206,7 +208,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             tool.InstallTool();
         }
 
-        public DPoint3d GetPointOnSegment(DPoint3d A, DPoint3d B, double distance)
+        public static DPoint3d GetPointOnSegment(DPoint3d A, DPoint3d B, double distance)
         {
             
                 // Calculez le vecteur AB
@@ -219,7 +221,8 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                 // Vérifiez si la longueur de AB est non nulle pour éviter la division par zéro
                 if (AB_length == 0)
                 {
-                    throw new ArgumentException("Les points A et B ne doivent pas coïncider.");
+                    Log.Write("Les points A et B ne doivent pas coïncider.");
+                    return new DPoint3d(-1, -1, -1);
                 }
 
                 // Calculez le vecteur perpendiculaire à AB
@@ -230,11 +233,13 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                 var perp_length = Math.Sqrt(perp_X * perp_X + perp_Y * perp_Y);
                 if (perp_length == 0)
                 {
-                    throw new InvalidOperationException("Le vecteur perpendiculaire est indéfini.");
-                }
+                    Log.Write("Le vecteur perpendiculaire est indéfini.");
+                    return new DPoint3d(-1, -1, -1);
 
-                // Calculez les coordonnées de C
-                var x = A.X + (distance) * (perp_X / perp_length);
+            }
+
+            // Calculez les coordonnées de C
+            var x = A.X + (distance) * (perp_X / perp_length);
                 var y = A.Y + (distance) * (perp_Y / perp_length);
                 var z = A.Z; // Conservez la coordonnée Z de A
 
@@ -242,7 +247,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             
         }
 
-        public DPoint3d GetPointUnderSegment(DPoint3d A, DPoint3d B, double distance)
+        public static DPoint3d GetPointUnderSegment(DPoint3d A, DPoint3d B, double distance)
         {
             // Calculez le vecteur AB
             var AB_X = B.X - A.X;
@@ -254,7 +259,9 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             // Vérifiez si la longueur de AB est non nulle pour éviter la division par zéro
             if (AB_length == 0)
             {
-                throw new ArgumentException("Les points A et B ne doivent pas coïncider.");
+                Log.Write("Les points A et B ne doivent pas coïncider.");
+                return new DPoint3d(-1, -1, -1);
+
             }
 
             // Calculez le vecteur perpendiculaire à AB
@@ -265,7 +272,9 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             var perp_length = Math.Sqrt(perp_X * perp_X + perp_Y * perp_Y);
             if (perp_length == 0)
             {
-                throw new InvalidOperationException("Le vecteur perpendiculaire est indéfini.");
+                Log.Write("Le vecteur perpendiculaire est indéfini.");
+                return new DPoint3d(-1, -1, -1);
+
             }
 
             // Calculez les coordonnées de C
@@ -276,7 +285,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             return new DPoint3d(x, y, z);
         }
 
-        public DPoint3d GetPointOnBisector(DPoint3d A, DPoint3d B, DPoint3d C, double distance)
+        public static DPoint3d GetPointOnBisector(DPoint3d A, DPoint3d B, DPoint3d C, double distance)
         {
             // Calculez les distances des points A et C à B
             var distBA = Math.Sqrt(Math.Pow(A.X - B.X, 2) + Math.Pow(A.Y - B.Y, 2));
@@ -285,7 +294,9 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             // Vérifiez si les distances sont non nulles pour éviter la division par zéro
             if (distBA == 0 || distBC == 0)
             {
-                throw new ArgumentException("Les points A et C ne doivent pas coïncider avec le point B.");
+                Log.Write("Les points A et C ne doivent pas coïncider avec le point B.");
+                return new DPoint3d(-1, -1, -1);
+
             }
 
             // Normalisez les vecteurs BA et BC
@@ -302,7 +313,9 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             var bisectorLength = Math.Sqrt(bisectorX * bisectorX + bisectorY * bisectorY);
             if (bisectorLength == 0)
             {
-                throw new InvalidOperationException("La bissectrice est indéfinie.");
+                Log.Write("La bissectrice est indéfinie.");
+                return new DPoint3d(-1, -1, -1);
+
             }
 
             // Calculez les coordonnées de D
@@ -313,7 +326,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             return new DPoint3d(x, y, z);
         }
 
-        public DPoint3d GetPointUnderBisector(DPoint3d A, DPoint3d B, DPoint3d C, double distance)
+        public static DPoint3d GetPointUnderBisector(DPoint3d A, DPoint3d B, DPoint3d C, double distance)
         {
             // Calculez les distances des points A et C à B
             var distBA = Math.Sqrt(Math.Pow(A.X - B.X, 2) + Math.Pow(A.Y - B.Y, 2));
@@ -322,7 +335,8 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             // Vérifiez si les distances sont non nulles pour éviter la division par zéro
             if (distBA == 0 || distBC == 0)
             {
-                throw new ArgumentException("Les points A et C ne doivent pas coïncider avec le point B.");
+                Log.Write("Les points A et C ne doivent pas coïncider avec le point B.");
+                return new DPoint3d(-1,-1,-1);
             }
 
             // Normalisez les vecteurs BA et BC
@@ -339,7 +353,9 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             var bisectorLength = Math.Sqrt(bisectorX * bisectorX + bisectorY * bisectorY);
             if (bisectorLength == 0)
             {
-                throw new InvalidOperationException("La bissectrice est indéfinie.");
+                Log.Write("La bissectrice est indéfinie.");
+                return new DPoint3d(-1, -1, -1);
+
             }
 
             // Calculez les coordonnées de D

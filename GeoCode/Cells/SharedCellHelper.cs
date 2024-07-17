@@ -35,7 +35,7 @@ public static class SharedCellHelper
     /// <returns></returns>
     public static SharedCellElement CreateSharedCell(SharedCellDefinitionElement cellDefinition, DPoint3d origin)
     {
-        return new SharedCellElement(
+        return new SharedCellElement( 
             Session.Instance.GetActiveDgnModel(),
             cellDefinition,
             cellDefinition.CellName,

@@ -8,16 +8,12 @@
 |
 +--------------------------------------------------------------------------------------*/
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using Bentley.DgnPlatformNET;
 using Bentley.MstnPlatformNET;
-using Bentley.MstnPlatformNET.InteropServices;
 using GeoCode.Model;
 using GeoCode.Utils;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace GeoCode
 {
@@ -30,7 +26,8 @@ namespace GeoCode
         private static readonly DirectoryInfo DirectoryInfo =
        new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.CreateSubdirectory("GeoCode");
 
-        private static readonly string CellLibraryFilePath = DirectoryInfo.FullName + Path.DirectorySeparatorChar + "GEO.dgnlib";
+        private static readonly string CellLibraryFilePath = DirectoryInfo.FullName + Path.DirectorySeparatorChar + "cellules_GEO_V2.cel";
+        private static readonly string DgnLibPath = DirectoryInfo.FullName + Path.DirectorySeparatorChar + "GEO.dgnlib";
 
         private GeoCode(IntPtr mdlDesc) : base(mdlDesc)
         {
@@ -49,7 +46,11 @@ namespace GeoCode
             Addin.ReloadEvent += GeoCode_ReloadEvent;
             Addin.UnloadedEvent += GeoCode_UnloadedEvent;
 
+            
+            Session.Instance.Keyin("ATTACH LIBRARY "+CellLibraryFilePath);
+            Session.Instance.Keyin("ATTACH LIBRARY " + DgnLibPath);
 
+            if (!DgnHelper.LoadOtherDgnFile(DgnLibPath)) { Log.Write("DGN non chargé"); };
             if (!DgnHelper.LoadOtherDgnFile(CellLibraryFilePath)) { Log.Write("DGN non chargé"); };
 
             //========================================

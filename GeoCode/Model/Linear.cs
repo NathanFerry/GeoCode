@@ -99,7 +99,7 @@ namespace GeoCode.Model
                 .First(element => element.Name == this.Level);
 
             Session.Instance.Keyin("ACTIVE LEVEL " + level.Name);
-            if (this.Placement == LinearPlacementTypeElement.SimpleLinear())
+            if (this.Placement.ToString() == "Linéaire Simple")
             {
                 Session.Instance.Keyin("PLACE SMARTLINE");
             } else

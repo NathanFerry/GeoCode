@@ -66,9 +66,9 @@ public static class CellPlacement
         //TODO: Altitude of the point (translate by moving it along the Z axis)
         if(ev.IsControlKey) return;
         
-        var cellDefinition = Session.Instance.GetActiveDgnFile().GetNamedSharedCellDefinitions()
+        var cellDefinition = DgnHelper.GetAllSharedCellsFromLibrary()
             .First(element => element.CellName == GeoCode.Application.PtTopo);
-        var level = Session.Instance.GetActiveDgnFile().GetLevelCache().GetHandles() 
+        var level = DgnHelper .GetAllLevelsFromLibrary()
             .First(element => element.Name == GeoCode.Application.LevelTopo);
         new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).Apply(cellDefinition);
         

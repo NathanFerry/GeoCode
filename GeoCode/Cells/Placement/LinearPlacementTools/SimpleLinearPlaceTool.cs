@@ -82,6 +82,8 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             {
                 line.DeleteFromModel();
             }
+
+
             
             ExitTool();
             return true;

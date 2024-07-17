@@ -59,11 +59,14 @@ public class ThreePointsRotationScalingPlaceTool : DgnPrimitiveTool
         } else if (_horizontalPoint is null)
         {
             var direction = new DVector3d(_origin.Value, ev.Point);
-            var angle = DVector3d.UnitX.AngleToXY(direction) - _cellElement.GetActualXYAngle(out _);
-            var rotationMatrix = DTransform3d.FromRotationAroundLine(_origin.Value, DVector3d.UnitZ, angle);
-            _cellElement.ApplyTransform(new TransformInfo(rotationMatrix));
-            
-            var factor = _origin.Value.DistanceXY(ev.Point) / SharedCellHelper.ComputeLength(_cellElement);
+            if (direction != DVector3d.Zero)
+            {
+                var angle = DVector3d.UnitX.AngleToXY(direction) - _cellElement.GetActualXYAngle(out _);
+                var rotationMatrix = DTransform3d.FromRotationAroundLine(_origin.Value, DVector3d.UnitZ, angle);
+                _cellElement.ApplyTransform(new TransformInfo(rotationMatrix));
+            }
+
+            var factor = _origin.Value.Distance(ev.Point) / SharedCellHelper.ComputeLength(_cellElement);
             DTransform3d.TryFixedPointAndDirectionalScale(_origin.Value, direction, factor, out var scaling);
             _cellElement.ApplyTransform(new TransformInfo(scaling));
         } else if (_verticalPoint is null)
@@ -76,7 +79,7 @@ public class ThreePointsRotationScalingPlaceTool : DgnPrimitiveTool
             var direction = new DVector3d(_origin.Value, _horizontalPoint.Value);
             direction.TryUnitPerpendicularXY(out var perpendicular);
             var scalingVector = new DVector3d(_origin.Value, ev.Point);
-            var factor = scalingVector.DotProductXY(perpendicular) / SharedCellHelper.ComputeWidth(_cellElement);
+            var factor = scalingVector.DotProduct(perpendicular) / SharedCellHelper.ComputeWidth(_cellElement);
             DTransform3d.TryFixedPointAndDirectionalScale(_origin.Value, direction.RotateXY(Angle.FromDegrees(90)), factor, out var scale);
             
             Console.WriteLine($@"{factor}");
