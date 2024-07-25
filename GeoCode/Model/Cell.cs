@@ -3,10 +3,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using Bentley.MstnPlatformNET;
 using Bentley.UI.Mvvm;
 using GeoCode.Cells.Placement;
 using GeoCode.Saving;
 using GeoCode.UI;
+using GeoCode.Utils;
 using Newtonsoft.Json;
 
 #region Documentation
@@ -90,6 +92,7 @@ namespace GeoCode.Model
 
         private void PlacementMethod()
         {
+            
             CellPlacement.PlacementTool(Name, Level, Placement);
         }
 

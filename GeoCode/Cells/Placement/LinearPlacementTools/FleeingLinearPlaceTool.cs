@@ -136,12 +136,14 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
 
         protected override bool OnResetButton(DgnButtonEvent ev)
         {
+            if (listPoints.Count > 2 && _nextPointReady)
+            {
+                listPointsOn.Add(ThickLinearPlaceTool.GetPointUnderSegment(_previous, listPoints[listPoints.Count - 2], _linearElement.Value.Value * 10000));
+                listPointsUnder.Add(ThickLinearPlaceTool.GetPointOnSegment(_previous, listPoints[listPoints.Count - 2], _linearElement.Value.Value * 10000));
+            }
             _nextPointReady = false;
 
-            if (listPoints.Count > 2)
-            listPointsOn.Add(ThickLinearPlaceTool.GetPointUnderSegment(_previous, listPoints[listPoints.Count-2], _linearElement.Value.Value * 10000));
-            listPointsUnder.Add(ThickLinearPlaceTool.GetPointOnSegment(_previous, listPoints[listPoints.Count - 2], _linearElement.Value.Value * 10000));
-
+            
             _verticalPoint = false;
 
             return true;

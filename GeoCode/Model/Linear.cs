@@ -98,14 +98,15 @@ namespace GeoCode.Model
             var level = DgnHelper.GetAllLevelsFromLibrary()
                 .First(element => element.Name == this.Level);
 
-            Session.Instance.Keyin("ACTIVE LEVEL " + level.Name);
-            if (this.Placement.ToString() == "Linéaire Simple")
+            Log.Write(Placement.ToString());
+            if (Placement.ToString() == "Linéaire simple")
             {
+                Session.Instance.Keyin("ACTIVE LEVEL " + Level);
                 Session.Instance.Keyin("PLACE SMARTLINE");
-            } else
-            {
-                LinearPlacement.LinearPlacementTool(this, Placement);
             }
+            else
+                LinearPlacement.LinearPlacementTool(this, Placement);
+            
             
 
             //LineElement line = new LineElement(Session.Instance.GetActiveDgnModel(), Element.,);

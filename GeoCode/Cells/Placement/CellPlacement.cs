@@ -47,6 +47,8 @@ public static class CellPlacement
         var level = DgnHelper.GetAllLevelsFromLibrary()
             .First(element => element.Name == cellLevel);
         new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).Apply(cellDefinition);
+
+        Log.Write(level.Name);
         try
         {
             //Using reflection to invoke InstallNewInstance method of tools. Placement tool must be named following this pattern:
@@ -68,8 +70,11 @@ public static class CellPlacement
         
         var cellDefinition = DgnHelper.GetAllSharedCellsFromLibrary()
             .First(element => element.CellName == GeoCode.Application.PtTopo);
-        var level = DgnHelper .GetAllLevelsFromLibrary()
+        var level = DgnHelper.GetAllLevelsFromLibrary()
             .First(element => element.Name == GeoCode.Application.LevelTopo);
+
+        
+
         new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).Apply(cellDefinition);
         
         var topoPoint = SharedCellHelper.CreateSharedCell(cellDefinition, ev.Point);

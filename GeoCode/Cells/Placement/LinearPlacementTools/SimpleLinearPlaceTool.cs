@@ -64,28 +64,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                 listPoints.Add(ev.Point);
                 return false;
             }
-            if (listPoints.Count >= 2)
-            {
-                var level = DgnHelper.GetAllLevelsFromLibrary()
-                .First(element => element.Name == _linearElement.Level);
-
-                _lineElement = new(Session.Instance.GetActiveDgnModel(), null,listPoints.ToArray());
-                
-                new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).SetLineStyleChain(level.GetByLevelLineStyle()).Apply(_lineElement);
-                _lineElement.AddToModel();
-               
-            }
-
             
-
-            foreach (var line in tempLines)
-            {
-                line.DeleteFromModel();
-            }
-
-
-            
-            ExitTool();
             return true;
         }
 
@@ -97,6 +76,25 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
         protected override bool OnResetButton(DgnButtonEvent ev)
         {
             nextPointReady = false;
+
+            if (listPoints.Count >= 2)
+            {
+                var level = DgnHelper.GetAllLevelsFromLibrary()
+                .First(element => element.Name == _linearElement.Level);
+
+                _lineElement = new(Session.Instance.GetActiveDgnModel(), null, listPoints.ToArray());
+
+                new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).SetLineStyleChain(level.GetByLevelLineStyle()).Apply(_lineElement);
+                _lineElement.AddToModel();
+
+            }
+
+            foreach (var line in tempLines)
+            {
+                line.DeleteFromModel();
+            }
+
+            ExitTool();
             return true;
         }
 

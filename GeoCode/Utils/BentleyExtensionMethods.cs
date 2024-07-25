@@ -1,6 +1,8 @@
 ﻿using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
+using Bentley.MstnPlatformNET;
+using System;
 
 namespace GeoCode.Utils;
 
@@ -39,5 +41,30 @@ public static class BentleyExtensionMethods
         element.GetOrientation(out var orientation);
         isXYRotation = orientation.IsXYRotation(out var angle);
         return angle;
+    }
+
+    public static DPoint3d GetClosestPointFrom(this LineStringElement lineString,DPoint3d point, out Angle angle)
+    {
+        
+        try
+        {
+            var curveVector = lineString.GetCurveVector();
+            var curve = curveVector.ClosestPointBounded(point);
+
+            var index = curveVector.CurveLocationDetailIndex(curve);
+
+            var c = curveVector.GetAt((int)index);
+            angle = new Angle();
+            if (c.GetStartEnd(out var p1, out var p2))
+            {
+                angle = new LineElement(Session.Instance.GetActiveDgnModel(), null, new DSegment3d { StartPoint = p1, EndPoint = p2 }).GetActualXYAngle(out var _);
+            }
+            return curve.Point;
+        } catch (Exception ex) 
+        { 
+            Log.Write(ex.ToString());
+        }
+        angle = new Angle();
+        return new DPoint3d(1,1,1);
     }
 }

@@ -31,6 +31,17 @@ public class Application : INotifyPropertyChanged
         }
     }
 
+    private double _maxDistClose;
+    public double MaxDistClose
+    {
+        get => _maxDistClose;
+        set
+        {
+            _maxDistClose = value;
+            OnPropertyChanged();
+        }
+    }
+
     private string _levelTopo;
     public string LevelTopo
     {

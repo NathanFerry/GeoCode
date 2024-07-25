@@ -44,12 +44,7 @@ namespace GeoCode.Utils
                     }
                 }
 
-                // Ajoute les cellules du fichier à charger
-                listCells.AddRange(OtherDGNFile.GetNamedSharedCellDefinitions());
-                foreach (var cell in OtherDGNFile.GetNamedSharedCellDefinitions())
-                {
-                    cell.AddChildComplete();
-                }
+                
 
                 return true;
             } else
@@ -69,8 +64,71 @@ namespace GeoCode.Utils
             Session.Instance.GetActiveDgnModel().ReadAndLoadDgnAttachments(new DgnAttachmentLoadOptions(true, true, true));
             
             return listCells.Concat(Session.Instance.GetActiveDgnFile().GetNamedSharedCellDefinitions());
-           
-
         }
+
+        public static DgnModel LocateCellModel(SharedCellDefinitionElement cellDef)
+        {
+            var opts = CellLibraryOptions.Include3d 
+                | CellLibraryOptions.IncludeAllLibraries 
+                | CellLibraryOptions.IncludeParametric 
+                | CellLibraryOptions.IncludeShared
+                | CellLibraryOptions.IncludeNonParametric
+                | CellLibraryOptions.DefaultAll
+                | CellLibraryOptions.Default
+                ;
+            var libs = new CellLibraryCollection(opts);
+
+            var name = cellDef;
+            DgnModel cellModel = null;
+
+            foreach (var lib in libs)
+            {
+                Log.Write(lib.Name);
+
+                if (name.Equals(lib.Name))
+                {
+                    Log.Write(lib.Name);
+                    StatusInt status;
+                    cellModel = lib.File.LoadRootModelById(out status, lib.File.FindModelIdByName(lib.Name), true, false, true);
+
+                    break;
+                }
+            }
+            return cellModel;
+        }
+
+        public static bool LocateAllCellsModels()
+        {
+            var opts = CellLibraryOptions.Include3d
+                | CellLibraryOptions.IncludeAllLibraries
+                | CellLibraryOptions.IncludeParametric
+                | CellLibraryOptions.IncludeShared
+                | CellLibraryOptions.IncludeNonParametric
+                | CellLibraryOptions.DefaultAll
+                | CellLibraryOptions.Default
+                ;
+            var libs = new CellLibraryCollection(opts);
+
+            List<DgnModel> cellModels = new List<DgnModel>();
+
+            foreach (var lib in libs)
+            {
+                StatusInt status;
+                var model = lib.File.LoadRootModelById(out status, lib.File.FindModelIdByName(lib.Name), true, false, true);
+
+                if (model == null) { continue; }
+                var hdlr = DgnComponentDefinitionHandler.GetForModel(model);
+                var s = hdlr.DefinitionModelHandler.CreateCellDefinition(Session.Instance.GetActiveDgnFile());
+
+                if (s == ParameterStatus.Success)
+                {
+                    Log.Write(lib.Name + " Chargé !");
+                    cellModels.Add(model);
+                }
+
+            }
+            return cellModels.Count > 0;
+        }
+
     }
 }

@@ -14,6 +14,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Label Width="80" HorizontalAlignment="Center">Point Topo</Label>
@@ -27,7 +28,13 @@
                 <ComboBox Name="LevelTopo" IsEditable="True" IsTextSearchEnabled="True"/>
             </StackPanel>
         </StackPanel>
-        <StackPanel Grid.Row="2">
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <Label Width="80" HorizontalAlignment="Center">Distance Max</Label>
+            <StackPanel Width="150">
+                <TextBox  Name="MaxDist" Height="25" PreviewTextInput="MaxDist_TextChanged"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="3">
             <Button Width="30" HorizontalAlignment="Center" Name="SaveSettingsButton" Click="SaveSettingsButton_OnClick">
                 <Image Source="Pictures/check.png" HorizontalAlignment="Right"></Image>
             </Button>

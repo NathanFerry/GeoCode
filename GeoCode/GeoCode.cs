@@ -53,6 +53,11 @@ namespace GeoCode
             if (!DgnHelper.LoadOtherDgnFile(DgnLibPath)) { Log.Write("DGN non chargé"); };
             if (!DgnHelper.LoadOtherDgnFile(CellLibraryFilePath)) { Log.Write("DGN non chargé"); };
 
+            if (!DgnHelper.LocateAllCellsModels())
+            {
+                Log.Write("Aucune cellules impoortées depuis les bibliothèque de cellules");
+            }
+
             //========================================
             // Open user interface
             Session.Instance.Keyin("GeoCode Interface Show");

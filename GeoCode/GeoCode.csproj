@@ -75,8 +75,9 @@
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.0-preview.4.24266.19\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -149,6 +150,7 @@
     <Compile Include="Cells\Placement\LinearPlacementTools\FleeingLinearPlaceTool.cs" />
     <Compile Include="Cells\Placement\LinearPlacementTools\SimpleLinearPlaceTool.cs" />
     <Compile Include="Cells\Placement\LinearPlacementTools\ThickLinearPlaceTool.cs" />
+    <Compile Include="Cells\Placement\PlacementTools\OnePointOnLinearPlaceTool.cs" />
     <Compile Include="Cells\Placement\PlacementTools\OnePointPlaceTool.cs" />
     <Compile Include="Cells\Placement\PlacementTools\OnePointRotationPlaceTool.cs" />
     <Compile Include="Cells\Placement\PlacementTools\ThreePointRotationScalingPlaceTool.cs" />
@@ -204,6 +206,8 @@
     <Compile Include="Utils\ExtensionMethods.cs" />
     <Compile Include="Utils\IsExternalInit.cs" />
     <Compile Include="Utils\Log.cs" />
+    <Compile Include="Utils\Scan.cs" />
+    <Compile Include="Utils\ScanCriteriaExtensions.cs" />
     <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\CellViewModel.cs" />
     <Compile Include="ViewModel\LinearViewModel.cs">

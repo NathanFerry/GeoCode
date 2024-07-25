@@ -136,14 +136,15 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
 
         protected override bool OnResetButton(DgnButtonEvent ev)
         {
-            if (listPoints.Count >= 2)
+            if (listPoints.Count >= 2 && nextPointReady)
             {
                 listPointsOn.Add(GetPointUnderSegment(listPoints[listPoints.Count - 1], listPoints[listPoints.Count - 2], _linearElement.Value.Value * 10000));
                 listPointsUnder.Add(GetPointOnSegment(listPoints[listPoints.Count - 1], listPoints[listPoints.Count - 2], _linearElement.Value.Value * 10000));
+                listPointsUnder.Reverse();
+                listPointsOn.Reverse();
             }
 
-            listPointsUnder.Reverse();
-            listPointsOn.Reverse();
+            
 
             nextPointReady = false;
             return true;
