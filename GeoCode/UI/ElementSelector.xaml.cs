@@ -12,9 +12,10 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Bentley.UI.Mvvm;
-using GeoCode.Cells.Placement;
+using GeoCode.Elements.Placement;
 using GeoCode.Model;
 using GeoCode.Saving;
+using GeoCode.Utils;
 using GeoCode.ViewModel;
 
 #endregion
@@ -83,11 +84,15 @@ namespace GeoCode.UI
 
         private void OpenAddElementMenuButton_OnClick(object sender, RoutedEventArgs e)
         {
+            AddElement.add = true;
+            AddElement.c = null;
             AddElement.ShowWindow();
         }
 
         private void OpenAddLinearElementMenuButton_OnClick(object sender, RoutedEventArgs e)
         {
+            AddLinearElement.add = true;
+            AddLinearElement.l = null;  
             AddLinearElement.ShowWindow();
         }
 
@@ -98,8 +103,10 @@ namespace GeoCode.UI
         
         private void SettingsButton_OnClick(object sender, RoutedEventArgs e)
         {
-            IsEnabled = false;
-            Settings.ShowWindow();
+            try
+            {
+                Settings.ShowWindow();
+            }catch  (Exception ex) { Log.Write(ex.ToString()); }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

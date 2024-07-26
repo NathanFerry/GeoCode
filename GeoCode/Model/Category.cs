@@ -2,9 +2,11 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using Bentley.UI.Mvvm;
 using GeoCode.UI;
+using GeoCode.UI.CategoryWindows;
 using GeoCode.ViewModel;
 using Newtonsoft.Json;
 
@@ -66,9 +68,29 @@ public sealed class Category : INotifyPropertyChanged
     [JsonIgnore]
     public ICommand Focus { get; }
 
+    [JsonIgnore]
+    public ICommand DeleteCommand { get; }
+
+    [JsonIgnore]
+    public ICommand RenameCommand { get; }
+
     public Category()
     {
         Focus = new RelayCommand(SetAsCurrentCategory);
+        RenameCommand = new RelayCommand(Rename);
+    }
+
+    private void Rename()
+    {
+        RenameWindow.cat = this;
+        RenameWindow.ShowWindow();
+    }
+
+    private void Delete()
+    {
+        var cats = (ObservableCollection<Category>)((ElementSelector)ElementSelector.ElementSelectorDockableWindow.Content).CategoryControl.ItemsSource;
+        cats.Remove(this);
+           
     }
 
     private void SetAsCurrentCategory()
