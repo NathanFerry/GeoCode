@@ -33,22 +33,7 @@ namespace GeoCode.Cells.Placement.PlacementTools
         #region DgnPrimitiveTool Members
         protected override bool OnDataButton(DgnButtonEvent ev)
         {
-            if (!DynamicsStarted)
-            {
-
-                var elements = Scan.GetElements(new List<MSElementType>() { MSElementType.LineString });
-                Log.Write("Elements retrouvés : " + elements.Count);
-                foreach (var element in elements)
-                {
-                   
-                    if (element.TypeName == "Ligne Brisée")
-                    {
-                        _lines.Add(element as LineStringElement);
-                    }
-                }
-                BeginDynamics();
-                return false;
-            }
+            
             
                 if (_lineElement != null)
                 {
@@ -66,7 +51,6 @@ namespace GeoCode.Cells.Placement.PlacementTools
                         _cellElement.ApplyTransform(new TransformInfo(rotation));
                     }
                     _cellElement.AddToModel();
-                    ExitTool();
                     return true;
                 }
                 else
@@ -81,6 +65,25 @@ namespace GeoCode.Cells.Placement.PlacementTools
         protected override void OnRestartTool()
         {
             InstallNewInstance(_cellDefinition);
+        }
+
+        protected override void OnPostInstall()
+        {
+            AccuSnap.SnapEnabled = true;
+
+            // On scan les chaines de lignes dans le dessin
+            var elements = Scan.GetElements(new List<MSElementType>() { MSElementType.LineString });
+            Log.Write("Elements retrouvés : " + elements.Count);
+            foreach (var element in elements)
+            {
+
+                if (element.TypeName == "Ligne Brisée")
+                {
+                    _lines.Add(element as LineStringElement);
+                }
+            }
+
+            BeginDynamics();
         }
 
         protected override bool OnResetButton(DgnButtonEvent ev)

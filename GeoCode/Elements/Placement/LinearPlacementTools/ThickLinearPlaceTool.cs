@@ -42,6 +42,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
         {
             if (!DynamicsStarted)
             {
+                
                 BeginDynamics();
                 _previous = ev.Point;
                 _origin = ev.Point;
@@ -121,7 +122,6 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                     line.DeleteFromModel();
                 }
 
-                ExitTool();
 
                 return true;
             }
@@ -158,6 +158,11 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                 if (_previous != _origin)
                 {
                     thirdPoint = GetPointOnBisector(listPoints[listPoints.Count - 2], _previous, ev.Point,_linearElement.Value.Value * 10000);
+
+                    if (thirdPoint.X == -1 && thirdPoint.Y == -1)
+                    {
+                        thirdPoint = GetPointOnSegment(_previous, ev.Point, _linearElement.Value.Value * 10000);
+                    }
                 } else
                 {
                     thirdPoint = GetPointOnSegment(_previous, ev.Point, _linearElement.Value.Value * 10000);
@@ -202,6 +207,11 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             return true;
         }
 
+        protected override void OnPostInstall()
+        {
+            AccuSnap.SnapEnabled = true;
+        }
+
 
         public static void InstallNewInstance(Linear linear)
         {
@@ -222,7 +232,6 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                 // Vérifiez si la longueur de AB est non nulle pour éviter la division par zéro
                 if (AB_length == 0)
                 {
-                    Log.Write("Les points A et B ne doivent pas coïncider.");
                     return new DPoint3d(-1, -1, -1);
                 }
 
@@ -234,7 +243,6 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                 var perp_length = Math.Sqrt(perp_X * perp_X + perp_Y * perp_Y);
                 if (perp_length == 0)
                 {
-                    Log.Write("Le vecteur perpendiculaire est indéfini.");
                     return new DPoint3d(-1, -1, -1);
 
             }
@@ -260,7 +268,6 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             // Vérifiez si la longueur de AB est non nulle pour éviter la division par zéro
             if (AB_length == 0)
             {
-                Log.Write("Les points A et B ne doivent pas coïncider.");
                 return new DPoint3d(-1, -1, -1);
 
             }
@@ -273,7 +280,6 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             var perp_length = Math.Sqrt(perp_X * perp_X + perp_Y * perp_Y);
             if (perp_length == 0)
             {
-                Log.Write("Le vecteur perpendiculaire est indéfini.");
                 return new DPoint3d(-1, -1, -1);
 
             }
@@ -295,7 +301,6 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             // Vérifiez si les distances sont non nulles pour éviter la division par zéro
             if (distBA == 0 || distBC == 0)
             {
-                Log.Write("Les points A et C ne doivent pas coïncider avec le point B.");
                 return new DPoint3d(-1, -1, -1);
 
             }
@@ -314,14 +319,25 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             var bisectorLength = Math.Sqrt(bisectorX * bisectorX + bisectorY * bisectorY);
             if (bisectorLength == 0)
             {
-                Log.Write("La bissectrice est indéfinie.");
                 return new DPoint3d(-1, -1, -1);
 
             }
 
+
+            var normX = (bisectorX / bisectorLength);
+            var normY = (bisectorY / bisectorLength);
+
+            var crossProduct = (A.X - B.X) * (C.Y - B.Y) - (A.Y - B.Y) * (C.X - B.X);
+            if (crossProduct > 0)
+            {
+                normX = -normX;
+                normY = -normY;
+            }
+
+
             // Calculez les coordonnées de D
-            var x = B.X + (distance) * (bisectorX / bisectorLength);
-            var y = B.Y + (distance) * (bisectorY / bisectorLength);
+            var x = B.X + (distance) * (normX);
+            var y = B.Y + (distance) * (normY);
             var z = B.Z; // Conservez la coordonnée Z de B
 
             return new DPoint3d(x, y, z);
@@ -336,7 +352,6 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             // Vérifiez si les distances sont non nulles pour éviter la division par zéro
             if (distBA == 0 || distBC == 0)
             {
-                Log.Write("Les points A et C ne doivent pas coïncider avec le point B.");
                 return new DPoint3d(-1,-1,-1);
             }
 
@@ -354,14 +369,24 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             var bisectorLength = Math.Sqrt(bisectorX * bisectorX + bisectorY * bisectorY);
             if (bisectorLength == 0)
             {
-                Log.Write("La bissectrice est indéfinie.");
                 return new DPoint3d(-1, -1, -1);
 
             }
 
+            var normX = (bisectorX / bisectorLength);
+            var normY = (bisectorY / bisectorLength);
+
+
+            var crossProduct = (A.X - B.X)*(C.Y-B.Y) - (A.Y-B.Y)*(C.X-B.X);
+            if (crossProduct > 0)
+            {
+                normX = -normX;
+                normY = -normY;
+            }
+
             // Calculez les coordonnées de D
-            var x = B.X + (-distance) * (bisectorX / bisectorLength);
-            var y = B.Y + (-distance) * (bisectorY / bisectorLength);
+            var x = B.X + (-distance) * (normX);
+            var y = B.Y + (-distance) * (normY);
             var z = B.Z; // Conservez la coordonnée Z de B
 
             return new DPoint3d(x, y, z);

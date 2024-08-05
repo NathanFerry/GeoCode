@@ -20,7 +20,7 @@
             </StackPanel>
         </StackPanel>
         <Button Name="AddCategoryButton" Grid.Row="1" Width="30" HorizontalAlignment="Center" Click="AddCategoryButton_OnClick">
-            <Image Source="Pictures/plus.png" />
+            <Image Source="../Pictures/plus.png" />
             <Button.Style>
                 <Style TargetType="Button">
                     <Style.Triggers>

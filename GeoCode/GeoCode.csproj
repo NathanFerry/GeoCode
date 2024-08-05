@@ -75,8 +75,9 @@
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.0-preview.4.24266.19\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -145,22 +146,22 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cells\Placement\LinearPlacement.cs" />
-    <Compile Include="Cells\Placement\CellPlacement.cs" />
-    <Compile Include="Cells\Placement\LinearPlacementTools\FleeingLinearPlaceTool.cs" />
-    <Compile Include="Cells\Placement\LinearPlacementTools\SimpleLinearPlaceTool.cs" />
-    <Compile Include="Cells\Placement\LinearPlacementTools\ThickLinearPlaceTool.cs" />
-    <Compile Include="Cells\Placement\PlacementTools\OnePointOnLinearPlaceTool.cs" />
-    <Compile Include="Cells\Placement\PlacementTools\OnePointPlaceTool.cs" />
-    <Compile Include="Cells\Placement\PlacementTools\OnePointRotationPlaceTool.cs" />
-    <Compile Include="Cells\Placement\PlacementTools\ThreePointRotationScalingPlaceTool.cs" />
-    <Compile Include="Cells\Placement\PlacementTools\TwoPointsRotationScalingPlaceTool.cs" />
-    <Compile Include="Cells\Placement\PlacementTools\TwoPointsRotationScalingSymmetricalPlaceTool.cs" />
-    <Compile Include="Cells\Placement\PlacementTools\TwoPointsScalingPlaceTool.cs" />
-    <Compile Include="Cells\Placement\LinearPlacementType.cs" />
-    <Compile Include="Cells\Placement\PlacementType.cs" />
-    <Compile Include="Cells\Placement\SharedCellPickPlaceTool.cs" />
-    <Compile Include="Cells\SharedCellHelper.cs" />
+    <Compile Include="Elements\Placement\LinearPlacement.cs" />
+    <Compile Include="Elements\Placement\CellPlacement.cs" />
+    <Compile Include="Elements\Placement\LinearPlacementTools\FleeingLinearPlaceTool.cs" />
+    <Compile Include="Elements\Placement\LinearPlacementTools\SimpleLinearPlaceTool.cs" />
+    <Compile Include="Elements\Placement\LinearPlacementTools\ThickLinearPlaceTool.cs" />
+    <Compile Include="Elements\Placement\PlacementTools\OnePointOnLinearPlaceTool.cs" />
+    <Compile Include="Elements\Placement\PlacementTools\OnePointPlaceTool.cs" />
+    <Compile Include="Elements\Placement\PlacementTools\OnePointRotationPlaceTool.cs" />
+    <Compile Include="Elements\Placement\PlacementTools\ThreePointRotationScalingPlaceTool.cs" />
+    <Compile Include="Elements\Placement\PlacementTools\TwoPointsRotationScalingPlaceTool.cs" />
+    <Compile Include="Elements\Placement\PlacementTools\TwoPointsRotationScalingSymmetricalPlaceTool.cs" />
+    <Compile Include="Elements\Placement\PlacementTools\TwoPointsScalingPlaceTool.cs" />
+    <Compile Include="Elements\Placement\LinearPlacementType.cs" />
+    <Compile Include="Elements\Placement\PlacementType.cs" />
+    <Compile Include="Elements\Placement\SharedCellPickPlaceTool.cs" />
+    <Compile Include="Elements\SharedCellHelper.cs" />
     <Compile Include="Model\Application.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\Cell.cs" />
@@ -181,21 +182,29 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="KeyinCommands.cs" />
-    <Compile Include="UI\AddCategory.cs" />
-    <Compile Include="UI\AddCategory.xaml.cs">
+    <Compile Include="UI\CategoryWindows\AddCategory.cs" />
+    <Compile Include="UI\CategoryWindows\AddCategory.xaml.cs">
       <DependentUpon>AddCategory.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\AddElement.cs" />
-    <Compile Include="UI\AddElement.xaml.cs">
+    <Compile Include="UI\CellsWindows\AddElement.cs" />
+    <Compile Include="UI\CellsWindows\AddElement.xaml.cs">
       <DependentUpon>AddElement.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\AddLinearElement.cs" />
-    <Compile Include="UI\AddLinearElement.xaml.cs">
+    <Compile Include="UI\LinearWindows\AddLinearElement.cs" />
+    <Compile Include="UI\LinearWindows\AddLinearElement.xaml.cs">
       <DependentUpon>AddLinearElement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\CategoryWindows\RenameCategory.cs" />
+    <Compile Include="UI\CategoryWindows\RenameCategory.xaml.cs">
+      <DependentUpon>RenameCategory.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ElementSelector.cs" />
     <Compile Include="UI\ElementSelector.xaml.cs">
       <DependentUpon>ElementSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\LinearWindows\SimpleLinearChoice.cs" />
+    <Compile Include="UI\LinearWindows\SimpleLinearChoice.xaml.cs">
+      <DependentUpon>SimpleLinearChoice.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Settings.cs" />
     <Compile Include="UI\Settings.xaml.cs">
@@ -237,25 +246,35 @@
     <Resource Include="UI\Pictures\plus.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="UI\AddCategory.xaml">
+    <Page Include="UI\CategoryWindows\AddCategory.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <DependentUpon>AddCategory.cs</DependentUpon>
     </Page>
-    <Page Include="UI\AddElement.xaml">
+    <Page Include="UI\CellsWindows\AddElement.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <DependentUpon>AddElement.cs</DependentUpon>
     </Page>
-    <Page Include="UI\AddLinearElement.xaml">
+    <Page Include="UI\LinearWindows\AddLinearElement.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <DependentUpon>AddLinearElement.cs</DependentUpon>
+    </Page>
+    <Page Include="UI\CategoryWindows\RenameCategory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <DependentUpon>RenameCategory.cs</DependentUpon>
     </Page>
     <Page Include="UI\ElementSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <DependentUpon>ElementSelector.cs</DependentUpon>
+    </Page>
+    <Page Include="UI\LinearWindows\SimpleLinearChoice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <DependentUpon>SimpleLinearChoice.cs</DependentUpon>
     </Page>
     <Page Include="UI\Settings.xaml">
       <SubType>Designer</SubType>
@@ -267,7 +286,7 @@
     <Resource Include="UI\Pictures\check.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Cells\README.md" />
+    <Content Include="Elements\README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

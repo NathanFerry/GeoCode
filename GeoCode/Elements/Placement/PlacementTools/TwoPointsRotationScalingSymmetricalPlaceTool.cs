@@ -29,10 +29,16 @@ namespace GeoCode.Cells.Placement.PlacementTools
         }
 
         #region DgnPrimitiveTool Members
+
+        protected override void OnPostInstall()
+        {
+            AccuSnap.SnapEnabled = true;
+        }
         protected override bool OnDataButton(DgnButtonEvent ev)
         {
             if (!DynamicsStarted)
             {
+
                 BeginDynamics();
                 return false;
             }
@@ -86,7 +92,7 @@ namespace GeoCode.Cells.Placement.PlacementTools
                 }
 
                 _cellElement.GetSnapOrigin(out var origin);
-                var distance = _origin.Value.Distance(ev.Point);
+                var distance = _origin.Value.DistanceXY(ev.Point);
 
                 if (distance != 0)
                 {
@@ -105,7 +111,7 @@ namespace GeoCode.Cells.Placement.PlacementTools
                 if (pos != _oldPos)
                 {
                     _cellElement.GetSnapOrigin(out var origin);
-                    var factor = Math.Abs(_origin.Value.Distance(_vectorPoint.Value) / SharedCellHelper.ComputeLength(_cellElement));
+                    var factor = Math.Abs(_origin.Value.DistanceXY(_vectorPoint.Value) / SharedCellHelper.ComputeLength(_cellElement));
                     var side = DTransform3d.FromUniformScaleAndFixedPoint(origin, factor);
                     _cellElement.ApplyTransform(new TransformInfo(side));
                 }

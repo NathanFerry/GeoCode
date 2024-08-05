@@ -18,11 +18,15 @@ public class ThreePointsRotationScalingPlaceTool : DgnPrimitiveTool
         _cellElement = SharedCellHelper.CreateSharedCell(cellDefinition, DPoint3d.Zero);
         Console.WriteLine("New Three points");
     }
-
+    protected override void OnPostInstall()
+    {
+        AccuSnap.SnapEnabled = true;
+    }
     protected override bool OnDataButton(DgnButtonEvent ev)
     {
         if (!DynamicsStarted)
         {
+
             BeginDynamics();
             return false;
         }
@@ -65,7 +69,9 @@ public class ThreePointsRotationScalingPlaceTool : DgnPrimitiveTool
                 _cellElement.ApplyTransform(new TransformInfo(rotationMatrix));
             }
 
-            var factor = _origin.Value.Distance(ev.Point) / SharedCellHelper.ComputeLength(_cellElement);
+            direction.Z = 0;
+
+            var factor = _origin.Value.DistanceXY(ev.Point) / SharedCellHelper.ComputeLength(_cellElement);
             DTransform3d.TryFixedPointAndDirectionalScale(_origin.Value, direction, factor, out var scaling);
             _cellElement.ApplyTransform(new TransformInfo(scaling));
         } else if (_verticalPoint is null)

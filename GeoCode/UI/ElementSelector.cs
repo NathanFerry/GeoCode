@@ -43,7 +43,7 @@ namespace GeoCode.UI
             ElementSelectorDockableWindow = new DockableWindow();
             ElementSelectorDockableWindow.Title = "Geocode sélection";
             ElementSelectorDockableWindow.Content = new ElementSelector();
-            ElementSelectorDockableWindow.Attach(GeoCode.Addin, "control", new Size(Convert.ToInt32(ElementSelectorDockableWindow.MinWidth),
+            ElementSelectorDockableWindow.Attach(GeoCode.Addin, "Select", new Size(Convert.ToInt32(ElementSelectorDockableWindow.MinWidth),
                         Convert.ToInt32(ElementSelectorDockableWindow.MinHeight)));
             ElementSelectorDockableWindow.WindowContent.ContentCloseQuery += new ContentCloseEventHandler(OnClose);
 

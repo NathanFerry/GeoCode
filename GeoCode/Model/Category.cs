@@ -78,12 +78,13 @@ public sealed class Category : INotifyPropertyChanged
     {
         Focus = new RelayCommand(SetAsCurrentCategory);
         RenameCommand = new RelayCommand(Rename);
+        DeleteCommand = new RelayCommand(Delete);
     }
 
     private void Rename()
     {
-        RenameWindow.cat = this;
-        RenameWindow.ShowWindow();
+        RenameCategory.cat = this;
+        RenameCategory.ShowWindow();
     }
 
     private void Delete()

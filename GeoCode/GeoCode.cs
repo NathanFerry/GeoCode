@@ -20,6 +20,7 @@ namespace GeoCode
     [AddIn(MdlTaskID = "GeoCode")]
     internal sealed class GeoCode : AddIn
     {
+
         public static GeoCode Addin = null;
         public static Application Application;
 

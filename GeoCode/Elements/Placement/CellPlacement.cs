@@ -46,8 +46,10 @@ public static class CellPlacement
          
         var level = DgnHelper.GetAllLevelsFromLibrary()
             .First(element => element.Name == cellLevel);
-        new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).Apply(cellDefinition);
 
+        new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetLineStyleChain(level.GetByLevelLineStyle()).SetColorChain(level.GetByLevelColor().Color).Apply(cellDefinition);
+
+        
         Log.Write(level.Name);
         try
         {
@@ -73,12 +75,14 @@ public static class CellPlacement
         var level = DgnHelper.GetAllLevelsFromLibrary()
             .First(element => element.Name == GeoCode.Application.LevelTopo);
 
-        
 
-        new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).Apply(cellDefinition);
+        if (GeoCode.Application.PlaceTopo)
+        {
+            new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).Apply(cellDefinition);
         
-        var topoPoint = SharedCellHelper.CreateSharedCell(cellDefinition, ev.Point);
-        topoPoint.ApplyTransform(new TransformInfo(DTransform3d.Scale(1)));
-        topoPoint.AddToModel();
+            var topoPoint = SharedCellHelper.CreateSharedCell(cellDefinition, ev.Point);
+            topoPoint.ApplyTransform(new TransformInfo(DTransform3d.Scale(1)));
+            topoPoint.AddToModel();
+        }
     }
 }

@@ -1,35 +1,48 @@
 ﻿using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
+using Bentley.MstnPlatformNET;
+using System.Windows.Media;
 
 namespace GeoCode.Cells.Placement.PlacementTools;
 public class OnePointPlaceTool : DgnPrimitiveTool
 {
-    private readonly SharedCellDefinitionElement _cellDefinition;
-    private readonly SharedCellElement _cellElement;
+    private SharedCellDefinitionElement _cellDefinition;
+    private SharedCellElement _cellElement;
     public OnePointPlaceTool(SharedCellDefinitionElement cellDefinition, int toolName, int toolPrompt) : base(toolName, toolPrompt)
     {
+
         _cellDefinition = cellDefinition;
         _cellElement = SharedCellHelper.CreateSharedCell(cellDefinition, DPoint3d.Zero);
     }
 
     protected override bool OnDataButton(DgnButtonEvent ev)
     {
-        if (!DynamicsStarted)
-        {
-            BeginDynamics();
-            return false;
-        }
-        
         _cellElement.AddToModel();
+
+        
         CellPlacement.PlaceTopoPoint(ev);
+        OnRestartTool();
         return true;
+    }
+
+    protected override void OnPostInstall()
+    {
+        AccuSnap.SnapEnabled = true;
+        BeginDynamics();
     }
 
     protected override void OnDynamicFrame(DgnButtonEvent ev)
     {
+        
         _cellElement.GetSnapOrigin(out var origin);
-        _cellElement.ApplyTransform(new TransformInfo(DTransform3d.FromTranslation(ev.Point - origin)));
+        DPoint3d currentPoint = ev.Point;
+        var transform = DTransform3d.Identity;
+        transform.Translation = currentPoint - origin;
+        TransformInfo transformInfo = new TransformInfo(transform);
+
+
+        _cellElement.ApplyTransform(transformInfo);
         
         var redraw = new RedrawElems();
         redraw.SetDynamicsViewsFromActiveViewSet(ev.Viewport);
@@ -44,6 +57,7 @@ public class OnePointPlaceTool : DgnPrimitiveTool
         return true;
     }
 
+
     protected override void OnRestartTool()
     {
         InstallNewInstance(_cellDefinition);
@@ -52,6 +66,7 @@ public class OnePointPlaceTool : DgnPrimitiveTool
     public static void InstallNewInstance(SharedCellDefinitionElement cellDefinition)
     {
         new OnePointPlaceTool(cellDefinition, 1, 1).InstallTool();
+
     }
     
 }

@@ -11,8 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using Bentley.UI.Mvvm;
-using GeoCode.Elements.Placement;
+using GeoCode.Cells.Placement;
 using GeoCode.Model;
 using GeoCode.Saving;
 using GeoCode.Utils;
@@ -27,8 +26,9 @@ namespace GeoCode.UI
 
         public ElementSelector()
         {
-            InitializeComponent();
+            
             GeoCode.Application = SaveManager.Load();
+            InitializeComponent();
             if (GeoCode.Application.PtTopo == null || GeoCode.Application.LevelTopo == null)
             {
                 Settings.ShowWindow();    
@@ -40,7 +40,7 @@ namespace GeoCode.UI
 
             CategoryControl.DataContext = categoriesViewModel;
 
-
+            this.PlaceTopoCheckBox.IsChecked = GeoCode.Application.PlaceTopo;
            
            
         }
@@ -66,7 +66,8 @@ namespace GeoCode.UI
         private void PasteLinearElement_OnClick(object sender, RoutedEventArgs e)
         {
             if (SaveLinearToPaste.label != null)
-                ((ObservableCollection<Linear>)((ElementSelector)ElementSelectorDockableWindow.Content).LinearControl.ItemsSource).Add(new Linear
+                if (this.LinearControl.HasItems)
+                ((ObservableCollection<Linear>)this.LinearControl.ItemsSource).Add(new Linear
                 {
                     Label = SaveLinearToPaste.label,
                     Level = SaveLinearToPaste.level,
@@ -111,15 +112,6 @@ namespace GeoCode.UI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var cm = ContextMenuService.GetContextMenu(sender as DependencyObject);
-            if (cm == null)
-            {
-                return;
-            }
-            cm.Placement = PlacementMode.Center;
-            cm.PlacementTarget = sender as UIElement;
-            cm.IsOpen = true;
-
         }
 
         private void Mouse_Click(object sender, MouseEventArgs e)
@@ -135,6 +127,10 @@ namespace GeoCode.UI
 
         }
 
-        
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var booleen = PlaceTopoCheckBox.IsChecked.GetValueOrDefault();
+            GeoCode.Application.PlaceTopo = booleen;
+        }
     }
 }

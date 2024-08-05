@@ -10,6 +10,7 @@ using Bentley.GeometryNET;
 using Bentley.MstnPlatformNET;
 using GeoCode.Model;
 using GeoCode.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Documents;
@@ -41,13 +42,20 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
         {
             if (!DynamicsStarted)
             {
-                CellPlacement.PlaceTopoPoint(ev);
+                BeginDynamics();
+                Log.Write("origin == null");
+                try
+                {
+                    CellPlacement.PlaceTopoPoint(ev);
+                } catch (Exception e)
+                {
+                    Log.Write(e.ToString());
+                }
+                
                 _origin = ev.Point;
                 _previous = ev.Point;
 
                 listPoints.Add(_origin);
-
-                BeginDynamics();
 
                 _nextPointReady=true;
                 return false;
@@ -121,12 +129,18 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                     line.DeleteFromModel();
                 }
 
-                ExitTool();
 
                 return true;
             }
-
+            OnRestartTool();
             return true;
+        }
+
+        protected override void OnPostInstall()
+        {
+            AccuSnap.SnapEnabled = true;
+            //AccuDraw.Active = true;
+            //BeginDynamics();
         }
 
         protected override void OnRestartTool()
@@ -154,6 +168,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
         {
             if (_nextPointReady)
             {
+                Log.Write(_linearElement.Value.Value.ToString());
                 var thirdPoint = new DPoint3d();
                 if (_previous != _origin)
                 {
@@ -204,10 +219,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             return true;
         }
 
-        protected override void OnPostInstall()
-        {
-            base.OnPostInstall();
-        }
+        
 
         public static void InstallNewInstance(Linear linear )
         {

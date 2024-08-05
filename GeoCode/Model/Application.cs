@@ -31,6 +31,17 @@ public class Application : INotifyPropertyChanged
         }
     }
 
+    private bool _placeTopo;
+    public bool PlaceTopo
+    {
+        get => _placeTopo;
+        set
+        {
+            _placeTopo = value;
+            OnPropertyChanged();
+        }
+    }
+
     private double _maxDistClose;
     public double MaxDistClose
     {

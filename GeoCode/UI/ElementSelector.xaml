@@ -16,9 +16,17 @@
                 <TextBlock Text="Paramètres"/>
             </Button>
         </Grid>
+        <DockPanel >
+            
+        </DockPanel>
         <DockPanel>
+            <Grid DockPanel.Dock="Top" Height="30">
+                <CheckBox Name="PlaceTopoCheckBox" DockPanel.Dock="Top" Grid.Column="1" IsChecked="True" Content="Placer point Topo" Click="CheckBox_Checked"></CheckBox>
+            </Grid>
             <Grid DockPanel.Dock="Top" Name="CategoryGrid">
-                <Grid.DataContext><viewModel:CategoriesViewModel /></Grid.DataContext>
+                <Grid.DataContext>
+                    <viewModel:CategoriesViewModel />
+                </Grid.DataContext>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="30"/>
@@ -33,6 +41,20 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Button Command="{Binding Focus}">
+                                    <Button.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem 
+                                                 Command="{Binding DeleteCommand}"
+                                                 IsCheckable="False"
+                                                 Header="Supprimer catégorie"
+                                             />
+                                            <MenuItem 
+                                             Command="{Binding RenameCommand}"
+                                             IsCheckable="False"
+                                             Header="Renommer catégorie"
+                                         />
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
                                     <TextBlock Text="{Binding Name}"/>
                                 </Button>
                             </DataTemplate>
@@ -43,120 +65,128 @@
                     <Image Source="Pictures/plus.png" />
                 </Button>
             </Grid>
-            <ScrollViewer Width="250"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <ScrollViewer.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem 
+            
+
+                <ScrollViewer Width="300" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ScrollViewer.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem 
                             Click="PasteElement_OnClick"
                             IsCheckable="False"
                             Header="Coller cellule"
                         />
-                        <MenuItem 
+                            <MenuItem 
                             Click="OpenAddElementMenuButton_OnClick"
                             IsCheckable="False"
                             Header="Ajouter cellule"
                         />
-                    </ContextMenu>
-                </ScrollViewer.ContextMenu>
-                <ItemsControl Name="CellControl" ItemsSource="{Binding Cells}" VerticalAlignment="Top">
-                    <ItemsControl.DataContext><viewModel:CellViewModel /></ItemsControl.DataContext>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Width="70" Height="70" Click="Button_Click">
-                                <Button.ContextMenu >
-                                    <ContextMenu>
-                                        <MenuItem 
+                        </ContextMenu>
+                    </ScrollViewer.ContextMenu>
+                    <ItemsControl Name="CellControl" ItemsSource="{Binding Cells}" VerticalAlignment="Top">
+                        <ItemsControl.DataContext>
+                            <viewModel:CellViewModel />
+                        </ItemsControl.DataContext>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button ToolTip="{Binding Label}" Width="35" Height="35" Command="{Binding PlaceCommand}">
+
+                                    <Button.ContextMenu >
+                                        <ContextMenu>
+                                            <MenuItem 
                                             Command="{Binding UpdateCommand}"
                                             IsCheckable="False"
                                             Header="Modifier"
                                         />
-                                        <MenuItem 
+                                            <MenuItem 
                                             Command="{Binding PlaceCommand}"
                                             IsCheckable="False"
                                             Header="Placer"
                                         />
-                                        <MenuItem 
+                                            <MenuItem 
                                             Command="{Binding CopyCommand}"
                                             IsCheckable="False"
                                             Header="Copier"
                                         />
-                                        <MenuItem 
+                                            <MenuItem 
                                              Command="{Binding DeleteCommand}"
                                             IsCheckable="False"
                                             Header="Supprimer"
                                         />
-                                    </ContextMenu>
-                                </Button.ContextMenu>
-                                <TextBlock VerticalAlignment="Center" Width="50" Height="50" Text="{Binding Label}"/>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                
-            </ScrollViewer>
-            <ScrollViewer Width="250"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <ScrollViewer.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem 
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </ScrollViewer>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ScrollViewer.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem 
                             Click="PasteLinearElement_OnClick"
                             IsCheckable="False"
                             Header="Coller linéaire"
-                        /> 
-                        <MenuItem 
+                        />
+                            <MenuItem 
                             Click="OpenAddLinearElementMenuButton_OnClick"
                             IsCheckable="False"
                             Header="Ajouter linéaire"
-                        />  
-                    </ContextMenu>
-                </ScrollViewer.ContextMenu>
-                <ItemsControl Name="LinearControl" ItemsSource="{Binding Linears}" VerticalAlignment="Top">
-                    <ItemsControl.DataContext>
-                        <viewModel:LinearViewModel />
-                    </ItemsControl.DataContext>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Width="70" Height="70" Click="Button_Click">
-                                <Button.ContextMenu >
-                                    <ContextMenu>
-                                        <MenuItem 
+                        />
+                        </ContextMenu>
+                    </ScrollViewer.ContextMenu>
+                    <ItemsControl Name="LinearControl" ItemsSource="{Binding Linears}" VerticalAlignment="Top">
+                        <ItemsControl.DataContext>
+                            <viewModel:LinearViewModel />
+                        </ItemsControl.DataContext>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button ToolTip="{Binding Label}" Width="35" Height="35" Command="{Binding PlaceCommand}">
+                                    <Button.ContextMenu >
+                                        <ContextMenu>
+                                            <MenuItem 
                                 Command="{Binding UpdateCommand}"
                                 IsCheckable="False"
                                 Header="Modifier"
                             />
-                                        <MenuItem 
+                                            <MenuItem 
                                 Command="{Binding PlaceCommand}"
                                 IsCheckable="False"
                                 Header="Placer"
                             />
-                                        <MenuItem 
+                                            <MenuItem 
                                 Command="{Binding CopyCommand}"
                                 IsCheckable="False"
                                 Header="Copier"
                             />
-                                        <MenuItem 
+                                            <MenuItem 
                                  Command="{Binding DeleteCommand}"
                                 IsCheckable="False"
                                 Header="Supprimer"
                             />
-                                    </ContextMenu>
-                                </Button.ContextMenu>
-                                <TextBlock VerticalAlignment="Center" Width="50" Height="50" Text="{Binding Label}"/>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
-            </ScrollViewer>
+                </ScrollViewer>
+         
+
         </DockPanel>
+        
     </DockPanel>
+    
+    
 </UserControl>

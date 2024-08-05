@@ -44,7 +44,7 @@
 
         <StackPanel Grid.Row="4" Orientation="Vertical">
             <Button Margin="5"  Name="AddElementButton"  Width="40" Click="AddElementButton_OnClick">
-                <Image Source="Pictures/plus.png"></Image>
+                <Image Source="../Pictures/plus.png"></Image>
                 <Button.Style>
                     <Style TargetType="Button">
                         <Style.Triggers>

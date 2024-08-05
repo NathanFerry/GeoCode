@@ -23,7 +23,8 @@ public static class SaveManager
         {
             return new Application()
             {
-                Categories = new ObservableCollection<Category>()
+                Categories = new ObservableCollection<Category>(),
+                PlaceTopo = true
             };
         }
         var serializedData = new FileInfo(FilePath).OpenText().ReadToEnd();

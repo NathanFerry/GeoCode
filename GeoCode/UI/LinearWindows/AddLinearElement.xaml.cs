@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -64,7 +65,9 @@ namespace GeoCode.UI
         
     private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new("[^0-9]+(.[^0-9]+)?");
+            NumberFormatInfo nfi = CultureInfo.CurrentCulture.NumberFormat;
+
+            Regex regex = new("[^0-9]" + nfi.NumberDecimalSeparator + "[^0-9]");
             e.Handled = regex.IsMatch(e.Text);
         }
 

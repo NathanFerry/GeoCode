@@ -31,6 +31,7 @@ namespace GeoCode.Cells.Placement.PlacementTools
         {
             if (!DynamicsStarted)
             {
+
                 BeginDynamics();
                 return false;
             }
@@ -47,6 +48,11 @@ namespace GeoCode.Cells.Placement.PlacementTools
             return true;
         }
 
+
+        protected override void OnPostInstall()
+        {
+            AccuSnap.SnapEnabled = true;
+        }
         protected override void OnRestartTool()
         {
             InstallNewInstance(_cellDefinition);

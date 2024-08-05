@@ -99,12 +99,12 @@ namespace GeoCode.Model
                 .First(element => element.Name == this.Level);
 
             Log.Write(Placement.ToString());
-            if (Placement.ToString() == "Linéaire simple")
+            /*if (Placement.ToString() == "Linéaire simple")
             {
                 Session.Instance.Keyin("ACTIVE LEVEL " + Level);
                 Session.Instance.Keyin("PLACE SMARTLINE");
             }
-            else
+            else*/
                 LinearPlacement.LinearPlacementTool(this, Placement);
             
             

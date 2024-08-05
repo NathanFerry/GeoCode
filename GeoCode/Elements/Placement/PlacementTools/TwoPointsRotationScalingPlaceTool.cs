@@ -17,11 +17,15 @@ public class TwoPointsRotationScalingPlaceTool : DgnPrimitiveTool
         _cellDefinition = cellDefinition;
         _cellElement = SharedCellHelper.CreateSharedCell(cellDefinition, DPoint3d.Zero);
     }
-
+    protected override void OnPostInstall()
+    {
+        AccuSnap.SnapEnabled = true;
+    }
     protected override bool OnDataButton(DgnButtonEvent ev)
     {
         if (!DynamicsStarted)
         {
+
             BeginDynamics();
             return false;
         }
