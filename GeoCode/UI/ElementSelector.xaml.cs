@@ -72,7 +72,7 @@ namespace GeoCode.UI
                     Label = SaveLinearToPaste.label,
                     Level = SaveLinearToPaste.level,
                     Placement = LinearPlacementTypeElement.FromString(SaveLinearToPaste.placement.ToString()),
-                    Value = SaveLinearToPaste.value,
+                    ThicknessOrlength = SaveLinearToPaste.value,
                 });
             else
             {

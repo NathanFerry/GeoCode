@@ -30,24 +30,15 @@ namespace GeoCode.Model
                 OnPropertyChanged();
             }
         }
-        private double? _thickness;
-        public double? Thickness
-        {
-            get => _thickness;
-            set
-            {
-                _thickness = value;
-                OnPropertyChanged();
-            }
-        }
+      
 
-        private double? _value;
-        public double? Value
+        private double? _thicknessOrLength;
+        public double? ThicknessOrlength
         {
-            get => _value;
+            get => _thicknessOrLength;
             set
             {
-                _value = value;
+                _thicknessOrLength = value;
                 OnPropertyChanged();
             }
         }
@@ -148,7 +139,7 @@ namespace GeoCode.Model
 
         public override string ToString()
         {
-            return $@"Value : {_value} | Level : {_level} | Placement : {_placement}";
+            return $@"Value : {_thicknessOrLength} | Level : {_level} | Placement : {_placement}";
         }
     }
 }

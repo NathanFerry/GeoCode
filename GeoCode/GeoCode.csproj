@@ -146,6 +146,8 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Elements\Drawing\CreateElement.cs" />
+    <Compile Include="Elements\Drawing\Draw.cs" />
     <Compile Include="Elements\Placement\LinearPlacement.cs" />
     <Compile Include="Elements\Placement\CellPlacement.cs" />
     <Compile Include="Elements\Placement\LinearPlacementTools\FleeingLinearPlaceTool.cs" />
@@ -166,6 +168,7 @@
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\Cell.cs" />
     <Compile Include="Model\Linear.cs" />
+    <Compile Include="Model\Node.cs" />
     <Compile Include="Saving\SavedCellToPaste.cs" />
     <Compile Include="Saving\SaveLinearToPaste.cs" />
     <Compile Include="Saving\SaveManager.cs" />
@@ -213,6 +216,7 @@
     <Compile Include="Utils\BentleyExtensionMethods.cs" />
     <Compile Include="Utils\DgnHelper.cs" />
     <Compile Include="Utils\ExtensionMethods.cs" />
+    <Compile Include="Utils\GeometricFunctions.cs" />
     <Compile Include="Utils\IsExternalInit.cs" />
     <Compile Include="Utils\Log.cs" />
     <Compile Include="Utils\Scan.cs" />

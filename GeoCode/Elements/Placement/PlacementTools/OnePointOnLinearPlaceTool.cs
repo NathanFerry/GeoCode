@@ -22,6 +22,8 @@ namespace GeoCode.Cells.Placement.PlacementTools
         private readonly SharedCellDefinitionElement _cellDefinition;
         private readonly SharedCellElement _cellElement;
         private List<LineStringElement> _lines = new List<LineStringElement>();
+        private List<LineElement> _line = new List<LineElement>();
+        private List<ArcElement> _arcs = new List<ArcElement>();
         private LineStringElement _lineElement;
         public DPoint3d _origin;
 
@@ -72,7 +74,7 @@ namespace GeoCode.Cells.Placement.PlacementTools
             AccuSnap.SnapEnabled = true;
 
             // On scan les chaines de lignes dans le dessin
-            var elements = Scan.GetElements(new List<MSElementType>() { MSElementType.LineString });
+            var elements = Scan.GetElements(new List<MSElementType>() { MSElementType.LineString, MSElementType.Line, MSElementType.Arc });
             Log.Write("Elements retrouvés : " + elements.Count);
             foreach (var element in elements)
             {
@@ -80,6 +82,13 @@ namespace GeoCode.Cells.Placement.PlacementTools
                 if (element.TypeName == "Ligne Brisée")
                 {
                     _lines.Add(element as LineStringElement);
+                } else if (element.TypeName =="Arc")
+                {
+                    _arcs.Add(element as ArcElement);
+
+                } else if (element.TypeName =="Ligne")
+                {
+                    _line.Add(element as LineElement);
                 }
             }
 
@@ -108,6 +117,17 @@ namespace GeoCode.Cells.Placement.PlacementTools
                     distance = element.GetClosestPointFrom(ev.Point, out var _).Distance(ev.Point);
                 }
             }
+
+            foreach (var element in _line)
+            {
+                if (element.GetClosestPointFrom(ev.Point, out var _).Distance(ev.Point) < distance
+                    && element.GetClosestPointFrom(ev.Point, out var _).Distance(ev.Point) <= GeoCode.Application.MaxDistClose * 100)
+                {
+                    found = true;
+                    distance = element.GetClosestPointFrom(ev.Point, out var _).Distance(ev.Point);
+                }
+            }
+
             if (!found) {
                 _lineElement = null; }
             

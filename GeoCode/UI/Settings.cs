@@ -43,7 +43,7 @@ namespace GeoCode.UI
             SettingsDockableWindow.Content = new Settings();
             SettingsDockableWindow.Attach(GeoCode.Addin, "control", new System.Drawing.Size(Convert.ToInt32(SettingsDockableWindow.MinWidth),
                         Convert.ToInt32(SettingsDockableWindow.MinHeight)));
-            SettingsDockableWindow.WindowContent.CanDockVertically = true;
+            SettingsDockableWindow.WindowContent.CanDockVertically = false;
             SettingsDockableWindow.WindowContent.ContentCloseQuery += new ContentCloseEventHandler(OnClose);
         }
 

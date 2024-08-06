@@ -8,11 +8,13 @@ using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
 using Bentley.MstnPlatformNET;
+using GeoCode.Elements.Drawing;
 using GeoCode.Model;
 using GeoCode.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Windows.Documents;
 using System.Windows.Forms;
 
@@ -23,12 +25,13 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
     internal class FleeingLinearPlaceTool : DgnPrimitiveTool
     {
         private Linear _linearElement;
-        private DPoint3d _origin;
-        private DPoint3d _previous;
-        private List<DPoint3d> listPoints = new List<DPoint3d>();
 
-        private List<DPoint3d> listPointsOn = new List<DPoint3d>();
-        private List<DPoint3d> listPointsUnder = new List<DPoint3d>();
+        private Node _preprevious;
+        private Node _previous;
+        private Node _origin;
+
+        private List<Node> _nodesOn = new List<Node>();
+        private List<Node> _nodesUnder = new List<Node>();
 
         private bool _nextPointReady = false;
         private bool _verticalPoint = true;
@@ -43,85 +46,106 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             if (!DynamicsStarted)
             {
                 BeginDynamics();
-                Log.Write("origin == null");
-                try
-                {
-                    CellPlacement.PlaceTopoPoint(ev);
-                } catch (Exception e)
-                {
-                    Log.Write(e.ToString());
-                }
                 
-                _origin = ev.Point;
-                _previous = ev.Point;
+                CellPlacement.PlaceTopoPoint(ev);
+               
+                _origin = new()
+                {
+                    Point = ev.Point,
+                    LType = LineType.DROITE
+                };
+                _previous = _origin;
+                _nextPointReady =true;
 
-                listPoints.Add(_origin);
 
-                _nextPointReady=true;
                 return false;
             }
             if (_nextPointReady)
             {
+                var level = DgnHelper.GetAllLevelsFromLibrary()
+                    .First(element => element.Name == _linearElement.Level);
+
                 CellPlacement.PlaceTopoPoint(ev);
 
-                var tempLine = new LineElement(Session.Instance.GetActiveDgnModel(), null, new DSegment3d() { StartPoint = _previous, EndPoint = ev.Point }); ;
+                var n = new Node() { Point = ev.Point, LType=LineType.DROITE };
+                var tempLine = CreateElement.Line(_previous,n);
 
-                tempLines.Add(
-                    tempLine
-                    );
-                tempLine.AddToModel();
-                if (_previous == _origin)
+                Draw.DrawElement(tempLine, level);
+
+                switch (_previous.LType)
                 {
-                    _previous = ev.Point;
-                    listPointsOn.Add(ThickLinearPlaceTool.GetPointOnSegment(_origin, _previous,_linearElement.Value.Value * 10000));
-                    listPointsUnder.Add(ThickLinearPlaceTool.GetPointUnderSegment(_origin, _previous, _linearElement.Value.Value * 10000));
+                    case LineType.DROITE:
 
-                    listPointsOn.Add(_origin);
-                    listPointsOn.Add(_previous);
+                        if (_previous == _origin)
+                        {
+                            _nodesOn.Add(new()
+                            {
+                                Point = GeometricFunctions.GetPointOnSegment(_previous.Point, n.Point, _linearElement.ThicknessOrlength.Value * 10000),
+                                LType = LineType.DROITE
+                            });
+                            _nodesOn.Add(_origin);
+                            _nodesOn.Add(n);
 
-                    listPointsUnder.Add(_origin);
-                    listPointsUnder.Add(_previous);
+                            _nodesUnder.Add(new()
+                            {
+                                Point = GeometricFunctions.GetPointUnderSegment(_previous.Point, n.Point, _linearElement.ThicknessOrlength.Value * 10000),
+                                LType = LineType.DROITE
+                            });
+                            _nodesUnder.Add(_origin);
+                            _nodesUnder.Add(n);
 
-                    listPoints.Add(_previous);
-                } else
-                {
-                    listPointsOn.Add(ThickLinearPlaceTool.GetPointOnBisector(listPoints[listPoints.Count-2], _previous,ev.Point, _linearElement.Value.Value * 10000));
-                    listPointsUnder.Add(ThickLinearPlaceTool.GetPointUnderBisector(listPoints[listPoints.Count-2], _previous,ev.Point, _linearElement.Value.Value * 10000));
-                    listPoints.Add(_previous);
-                    listPointsOn.Add(_previous);
+                        }
+                        else
+                        {
+                            _nodesOn.Add(new()
+                            {
+                                Point = GeometricFunctions.GetPointOnBisector(_preprevious.Point,_previous.Point, n.Point, _linearElement.ThicknessOrlength.Value * 10000),
+                                LType = LineType.DROITE
+                            });
+                            _nodesOn.Add(_previous);
+                            _nodesOn.Add(n);
 
-                    listPointsUnder.Add(_previous);
-                    _previous = ev.Point;
-                    listPoints.Add(_previous);
-                    listPointsOn.Add(_previous);
-                    listPointsUnder.Add(_previous);
+                            _nodesUnder.Add(new()
+                            {
+                                Point = GeometricFunctions.GetPointUnderBisector(_preprevious.Point,_previous.Point, n.Point, _linearElement.ThicknessOrlength.Value * 10000),
+                                LType = LineType.DROITE
+                            });
+                            _nodesUnder.Add(_previous);
+                            _nodesUnder.Add(n);
+                        }
+
+                        _preprevious = _previous;
+                        _previous = n;
+
+                        break;
                 }
+                
+                
                 return false;
             }
             if (_verticalPoint == false)
             {
                 _verticalPoint = true;
-                var crossProductDirection = (_previous.X - _origin.X) * (ev.Point.Y - _origin.Y) >
-                     (_previous.Y - _origin.Y) * (ev.Point.X - _origin.X)
+                var crossProductDirection = (_previous.Point.X - _origin.Point.X) * (ev.Point.Y - _origin.Point.Y) >
+                     (_previous.Point.Y - _origin.Point.Y) * (ev.Point.X - _origin.Point.X)
                ? 1
                : -1;
 
-                if (listPoints.Count > 1)
+                if (_nodesOn.Count > 1)
                 {
                     var level = DgnHelper.GetAllLevelsFromLibrary()
                     .First(element => element.Name == _linearElement.Level);
 
                     if (crossProductDirection == -1)
                     {
-                        _lineElement = new(Session.Instance.GetActiveDgnModel(), null, listPointsUnder.ToArray());
+                        var complexElement = CreateElement.ComplexString(_nodesUnder);
+                        Draw.DrawElement(complexElement, level);
                     }
                     else
                     {
-                        _lineElement = new(Session.Instance.GetActiveDgnModel(), null, listPointsOn.ToArray());
+                        var complexElement = CreateElement.ComplexString(_nodesOn);
+                        Draw.DrawElement(complexElement, level);
                     }
-
-                    new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).SetLineStyleChain(level.GetByLevelLineStyle()).Apply(_lineElement);
-                    _lineElement.AddToModel();
                 }
 
                 foreach (var line in tempLines)
@@ -139,7 +163,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
         protected override void OnPostInstall()
         {
             AccuSnap.SnapEnabled = true;
-            //AccuDraw.Active = true;
+            AccuDraw.Active = true;
             //BeginDynamics();
         }
 
@@ -148,52 +172,36 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             InstallNewInstance(_linearElement);
         }
 
-        protected override bool OnResetButton(DgnButtonEvent ev)
-        {
-            if (listPoints.Count > 2 && _nextPointReady)
-            {
-                listPointsOn.Add(ThickLinearPlaceTool.GetPointUnderSegment(_previous, listPoints[listPoints.Count - 2], _linearElement.Value.Value * 10000));
-                listPointsUnder.Add(ThickLinearPlaceTool.GetPointOnSegment(_previous, listPoints[listPoints.Count - 2], _linearElement.Value.Value * 10000));
-            }
-            _nextPointReady = false;
-
-            
-            _verticalPoint = false;
-
-            return true;
-        }
-
-
+        
         protected override void OnDynamicFrame(DgnButtonEvent ev)
         {
             if (_nextPointReady)
             {
-                Log.Write(_linearElement.Value.Value.ToString());
+                var n = new Node()
+                {
+                    Point = ev.Point,
+                    LType = LineType.DROITE
+                };
                 var thirdPoint = new DPoint3d();
                 if (_previous != _origin)
                 {
-                    thirdPoint = ThickLinearPlaceTool.GetPointOnBisector(listPoints[listPoints.Count - 2], _previous, ev.Point, _linearElement.Value.Value * 10000);
+                    thirdPoint = GeometricFunctions.GetPointOnBisector(_preprevious.Point, _previous.Point, ev.Point, _linearElement.ThicknessOrlength.Value * 10000);
                 }
                 else
                 {
-                    thirdPoint = ThickLinearPlaceTool.GetPointOnSegment(_previous, ev.Point, _linearElement.Value.Value * 10000);
+                    thirdPoint = GeometricFunctions.GetPointOnSegment(_previous.Point, ev.Point, _linearElement.ThicknessOrlength.Value * 10000);
                 }
-                var redraw = new RedrawElems();
-                redraw.SetDynamicsViewsFromActiveViewSet(ev.Viewport);
-                redraw.DrawMode = DgnDrawMode.TempDraw;
-                redraw.DrawPurpose = DrawPurpose.Dynamics;
-                redraw.DoRedraw(new LineStringElement(
-                    Session.Instance.GetActiveDgnModel(),
-                    null,
-                    new DPoint3d[3] { ev.Point, _previous, thirdPoint }
-                    )
-                );
+                var line = CreateElement.Line(_previous, n);
+                Draw.DrawDynamicElement(line, ev);
+
+                line = CreateElement.Line(_previous, new() { Point = thirdPoint, LType = LineType.DROITE });
+                Draw.DrawDynamicElement(line, ev);
                 return;
             }
             if (_verticalPoint)
             {
-                var crossProductDirection = (_previous.X - _origin.X) * (ev.Point.Y - _origin.Y) >
-                    (_previous.Y - _origin.Y) * (ev.Point.X - _origin.X)
+                var crossProductDirection = (_previous.Point.X - _origin.Point.X) * (ev.Point.Y - _origin.Point.Y) >
+                    (_previous.Point.Y - _origin.Point.Y) * (ev.Point.X - _origin.Point.X)
               ? 1
               : -1;
 
@@ -204,22 +212,42 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
 
                 if (crossProductDirection == -1)
                 {
-                    redraw.DoRedraw(new LineStringElement(Session.Instance.GetActiveDgnModel(), null, listPointsUnder.ToArray()));
-
+                    var complex = CreateElement.ComplexString(_nodesUnder);
+                    Draw.DrawDynamicElement(complex, ev);
                 }
                 else
-                    redraw.DoRedraw(new LineStringElement(Session.Instance.GetActiveDgnModel(), null, listPointsOn.ToArray()));
+                {
+                    var complex = CreateElement.ComplexString(_nodesOn);
+                    Draw.DrawDynamicElement(complex, ev);
+                }
 
             }
         }
 
-        protected override bool OnInstall()
+        protected override bool OnResetButton(DgnButtonEvent ev)
         {
+            if (_nodesOn.Count > 2 && _nextPointReady)
+            {
+                _nodesOn.Add(new()
+                {
+                    Point = GeometricFunctions.GetPointUnderSegment(_previous.Point, _preprevious.Point, _linearElement.ThicknessOrlength.Value * 10000),
+                    LType = LineType.DROITE
+                });
+                _nodesUnder.Add(new()
+                {
+                    Point = GeometricFunctions.GetPointOnSegment(_previous.Point, _preprevious.Point, _linearElement.ThicknessOrlength.Value * 10000),
+                    LType = LineType.DROITE
+                });
+
+            }
+            _nextPointReady = false;
+
+
+            _verticalPoint = false;
 
             return true;
         }
 
-        
 
         public static void InstallNewInstance(Linear linear )
         {

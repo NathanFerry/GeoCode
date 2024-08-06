@@ -8,6 +8,7 @@ using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
 using Bentley.MstnPlatformNET;
+using GeoCode.Elements.Drawing;
 using GeoCode.Model;
 using GeoCode.UI.LinearWindows;
 using GeoCode.Utils;
@@ -24,95 +25,145 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
     internal class SimpleLinearPlaceTool : DgnPrimitiveTool
     {
         private readonly Linear _linearElement;
-        private DPoint3d _origin;
-        private DPoint3d _previous;
-        private DPoint3d _preprevious;
-        private CurveElement _curveElement;
-        private List<DPoint3d> listPoints = new();
-        private List<LineElement> tempLines = new();
-        private bool first = true;
+
+        //Points avant
+        private Node _previous;
+        private Node _preprevious;
+
+        private List<Node> _nodes = new List<Node>();
+
+        // Elements temporaires à supprimer en fin de commande
+        private List<LineElement> _tempLines = new List<LineElement>();
+        private List<ArcElement> _tempArcs = new List<ArcElement>();
+
+        // Etape de 
         private bool nextPointReady = false;
 
 
         public SimpleLinearPlaceTool(Linear linear, int toolName, int toolPrompt) : base(toolName, toolPrompt) { _linearElement = linear; }
 
         #region DgnPrimitiveTool Members
+
+        // Le boutton est cliqué
         protected override bool OnDataButton(DgnButtonEvent ev)
         {
             
             if (!DynamicsStarted)
             {
+                //Lancement des dynamiques et placement origine
                 BeginDynamics();
-                _origin = ev.Point;
-                _previous = ev.Point;
+
+                _previous = new Node()
+                {
+                    Point = ev.Point,
+                    LType = LineType.DROITE
+                };
+
+
                 CellPlacement.PlaceTopoPoint(ev);
-
-               
-                listPoints.Add(ev.Point);
-
                 nextPointReady = true;
 
-               
                 return false;
             }
             
+            // Points suivants
             if (nextPointReady)
             {
-                if (SimpleLinearChoice.selectedType == "Line")
-                {
-                    var tempLine = new LineElement(Session.Instance.GetActiveDgnModel(), null, new DSegment3d() { StartPoint = _previous, EndPoint = ev.Point }); ;
+                // Niveau du linéaire
+                var level = DgnHelper.GetAllLevelsFromLibrary().First(element => element.Name == _linearElement.Level);
 
-                    tempLines.Add(
-                        tempLine
-                     );
-
-                    tempLine.AddToModel();
-                } else
-                {
-                    if (first)
-                    {
-                        
-                        _preprevious = _previous;
-                        _previous = ev.Point;
+                // Noeud courant
+                Node n = new() { Point = ev.Point, LType =  LineType.DROITE };
 
 
-
-                        first = false;
-                    } else
-                    {
-                        if (_preprevious == null) { Log.Write("Pas de Preprevious"); return false; }
-                        var bissectorPoint = FindIntersectionOfPerpendicularBisectors(_preprevious, _previous, ev.Point);
-
-                        var ellipse = new DEllipse3d()
-                        {
-                            
-                        };
-
-                        if (!ellipse.InitEllipticalArcFromCenterAxisEnd(bissectorPoint, _preprevious, ev.Point)) Log.Write("InitEllipticalArc ne fonctionne pas");
-
-                        var arc = new ArcElement(
-                            Session.Instance.GetActiveDgnModel(),
-                            null,
-                            ellipse
-                        );
-                        arc.AddToModel();
-
-                        _preprevious = _previous;
-                        _previous = ev.Point;
-
-                        first = true;
-
-                    }
-                }
+                _nodes.Add(_previous);
+                //====Traitement====\\
 
                 CellPlacement.PlaceTopoPoint(ev);
 
-                _previous = ev.Point;
-                listPoints.Add(ev.Point);
+                switch (_previous.LType) {
+                    case LineType.DROITE:
+
+                        // Création Ligne
+                        var line = CreateElement.Line(_previous, n);
+                        _tempLines.Add(line);
+
+                        // Dessin ligne
+                        Draw.DrawElement(line, level);
+
+                        break;
+
+                    case LineType.ARC:
+                        if (_preprevious != null && _preprevious.LType == LineType.ARC)
+                        {
+                            // Création d'Arc
+                          
+                            var arc = CreateElement.Arc(_preprevious, _previous, n);
+                            _tempArcs.Add(arc);
+
+                            // Dessin Arc
+                            Draw.DrawElement(arc, level);
+
+                            _preprevious = null;
+                        } else
+                        {
+                            _preprevious = _previous;
+                        }
+                        break;
+                }
+
+               
+                _previous = n;
                 return false;
             }
             OnRestartTool();
             return true;
+        }
+
+        // A chaque image  
+        protected override void OnDynamicFrame(DgnButtonEvent ev)
+        {
+            if (_previous == null)
+            {
+                return;
+            }
+            if (nextPointReady)
+            {
+
+                // Niveau du linéaire
+                var level = DgnHelper.GetAllLevelsFromLibrary().First(element => element.Name == _linearElement.Level);
+
+                // Noeud courant
+                Node n = new() { Point = ev.Point, LType = LineType.DROITE };
+                _previous.LType = SimpleLinearChoice.selectedType == "Arc" ? LineType.ARC : LineType.DROITE;
+
+                switch (_previous.LType)
+                {
+                    case LineType.DROITE:
+
+                        // Création Ligne
+                        var line = CreateElement.Line(_previous, n);
+
+                        // Dessin ligne
+                        Draw.DrawDynamicElement(line, ev);
+
+                        break;
+
+                    case LineType.ARC:
+                        if (_preprevious != null && _preprevious.LType == LineType.ARC)
+                        {
+                            // Création d'Arc
+
+                            var arc = CreateElement.Arc(_preprevious, _previous, n);
+
+                            // Dessin Arc
+                            Draw.DrawDynamicElement(arc, ev);
+                        }
+                        break;
+                }
+
+                return;
+            }
         }
 
         protected override void OnRestartTool()
@@ -130,99 +181,36 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
         {
             nextPointReady = false;
 
-            if (listPoints.Count >= 2)
-            {
-                var level = DgnHelper.GetAllLevelsFromLibrary()
-                .First(element => element.Name == _linearElement.Level);
-                try
-                {
-                    _curveElement = new(Session.Instance.GetActiveDgnModel(), null, listPoints.ToArray());
+            _nodes.Add(_previous);
 
+            var level = DgnHelper.GetAllLevelsFromLibrary()
+              .First(element => element.Name == _linearElement.Level);
 
+            Log.Write("Suppression lignes et arcs temporaires");
+            // Supprimer arcs et lignes temporaires
+            foreach (var arc in _tempArcs) arc.DeleteFromModel();
+            foreach (var line  in _tempLines) line.DeleteFromModel();
 
+            Log.Write("Création complexElement");
+            // Ajoute au modèle 
+            var complexElement = CreateElement.ComplexString(_nodes);
 
-                    new ElementPropertiesSetter().SetLevelChain(level.LevelId).SetColorChain(level.GetByLevelColor().Color).SetLineStyleChain(level.GetByLevelLineStyle()).Apply(_curveElement);
-                    _curveElement.AddToModel();
-                } catch (Exception e)
-                {
-                    Log.Write(e.ToString());    
-                }
-
-            }
-
-            foreach (var line in tempLines)
-            {
-                line.DeleteFromModel();
-            }
+            Draw.DrawElement(complexElement, level);
 
             ExitTool();
-
             return true;
         }
+
+
         protected override void OnPostInstall()
         {
             AccuSnap.SnapEnabled = true;
             AccuDraw.Active = true;
             SimpleLinearChoice.ShowWindow();
         }
-        protected override void OnDynamicFrame(DgnButtonEvent ev)
-        {
-            if (_previous == null)
-            {
-                return;
-            }
-            if (nextPointReady)
-            {
-                if (SimpleLinearChoice.selectedType == "Line")
-                {
-                    DSegment3d dSegment3D = new()
-                    {
-                        StartPoint = _previous,
-                        EndPoint = ev.Point
-                    } ;
-
-                    
-
-                    var line = new LineElement(Session.Instance.GetActiveDgnModel(), null, dSegment3D);
 
 
-                    var redraw = new RedrawElems();
-                    redraw.SetDynamicsViewsFromActiveViewSet(ev.Viewport);
-                    redraw.DrawMode = DgnDrawMode.TempDraw;
-                    redraw.DrawPurpose = DrawPurpose.Dynamics;
-                    redraw.DoRedraw(line);
-
-                } else
-                {
-                    DEllipse3d ellipse =  new DEllipse3d()
-                    {
-                    } ;
-
-                    if (!first)
-                    {
-                        ellipse = new DEllipse3d()
-                        {
-                        };
-                        
-                        var bissectorPoint = FindIntersectionOfPerpendicularBisectors(_preprevious, _previous, ev.Point);
-
-                            
-                        if (!ellipse.InitEllipticalArcFromCenterAxisEnd(bissectorPoint,_preprevious, ev.Point)) Log.Write("InitEllipticalArc ne fonctionne pas" );
-                       
-                    }
-
-                    var arc = new ArcElement(Session.Instance.GetActiveDgnModel(),null,ellipse);
-
-                    var redraw = new RedrawElems();
-                    redraw.SetDynamicsViewsFromActiveViewSet(ev.Viewport);
-                    redraw.DrawMode = DgnDrawMode.TempDraw;
-                    redraw.DrawPurpose = DrawPurpose.Dynamics;
-                    redraw.DoRedraw(arc);
-                }
-                
-                return;
-            }
-        }
+       
 
         protected override bool OnInstall()
         {
@@ -238,72 +226,6 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
         }
         #endregion
 
-        public DPoint3d FindIntersectionOfPerpendicularBisectors(DPoint3d A, DPoint3d B, DPoint3d C)
-        {
-            // Calculez les milieux des segments AB et BC
-            var midAB = new DPoint3d((A.X + B.X) / 2, (A.Y + B.Y) / 2, (A.Z + B.Z) / 2);
-            var midBC = new DPoint3d((B.X + C.X) / 2, (B.Y + C.Y) / 2, (B.Z + C.Z) / 2);
-
-            double perpSlopeAB, perpSlopeBC;
-
-            // Calculez les pentes des segments AB et BC, en gérant les cas verticaux
-            if (B.X == A.X)
-            {
-                perpSlopeAB = 0; // La perpendiculaire à un segment vertical est horizontale
-            }
-            else
-            {
-                var slopeAB = (B.Y - A.Y) / (B.X - A.X);
-                perpSlopeAB = -1 / slopeAB;
-            }
-
-            if (C.X == B.X)
-            {
-                perpSlopeBC = 0; // La perpendiculaire à un segment vertical est horizontale
-            }
-            else
-            {
-                var slopeBC = (C.Y - B.Y) / (C.X - B.X);
-                perpSlopeBC = -1 / slopeBC;
-            }
-
-            double x, y;
-
-            // Résolvez le système pour trouver l'intersection, en gérant les cas particuliers
-            if (perpSlopeAB == perpSlopeBC)
-            {
-                
-                return new DPoint3d(-1, -1, -1);
-            }
-            else if (B.X == A.X) // AB est vertical
-            {
-                x = midAB.X;
-                y = perpSlopeBC * (x - midBC.X) + midBC.Y;
-            }
-            else if (C.X == B.X) // BC est vertical
-            {
-                x = midBC.X;
-                y = perpSlopeAB * (x - midAB.X) + midAB.Y;
-            }
-            else if (perpSlopeAB == 0) // AB est horizontal
-            {
-                y = midAB.Y;
-                x = (y - midBC.Y) / perpSlopeBC + midBC.X;
-            }
-            else if (perpSlopeBC == 0) // BC est horizontal
-            {
-                y = midBC.Y;
-                x = (y - midAB.Y) / perpSlopeAB + midAB.X;
-            }
-            else
-            {
-                x = (perpSlopeBC * midBC.X - perpSlopeAB * midAB.X + midAB.Y - midBC.Y) / (perpSlopeBC - perpSlopeAB);
-                y = perpSlopeAB * (x - midAB.X) + midAB.Y;
-            }
-
-            var z = (midAB.Z + midBC.Z) / 2; // En supposant que les points A, B et C sont coplanaires dans XY.
-
-            return new DPoint3d(x, y, z);
-        }
+       
     }
 }

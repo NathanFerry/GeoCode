@@ -20,7 +20,7 @@ namespace GeoCode.Saving
             {
                 if (linear == null) { return; }
                 label = linear.Label;
-                value = linear.Value;
+                value = linear.ThicknessOrlength;
                 level = linear.Level;
                 placement = linear.Placement;
             }

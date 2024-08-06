@@ -55,9 +55,9 @@ namespace GeoCode.UI
                 LinearFunction.SelectedItem = l.Placement.ToString();
                 LevelSelection.SelectedItem = l.Level;
                 LinearLabel.Text = l.Label;
-                if (l.Value.HasValue)
+                if (l.ThicknessOrlength.HasValue)
                 {
-                    NumberTextBox.Text = l.Value.Value.ToString();
+                    NumberTextBox.Text = l.ThicknessOrlength.Value.ToString();
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace GeoCode.UI
                         Label = this.LinearLabel.Text,
                         Placement = LinearPlacementTypeElement.FromString(LinearFunction.SelectedItem.ToString()),
                         Level = LevelSelection.SelectedItem.ToString(),
-                        Value = value
+                        ThicknessOrlength = value
                     });
                 } catch(Exception ex)
                 {
@@ -111,7 +111,7 @@ namespace GeoCode.UI
                 l.Label = LinearLabel.Text;
                 l.Placement = LinearPlacementTypeElement.FromString(LinearFunction.SelectedItem.ToString());
                 l.Level = LevelSelection.SelectedItem.ToString();
-                l.Value = value;
+                l.ThicknessOrlength = value;
 
             }
             AddLinearElement.CloseWindow();
