@@ -81,21 +81,6 @@ namespace GeoCode.Utils
             var name = cellDef;
             DgnModel cellModel = null;
 
-            foreach (var lib in libs)
-            {
-                Log.Write(lib.Name);
-
-                if (name.Equals(lib.Name))
-                {
-                    Log.Write(lib.Name);
-                    StatusInt status;
-                    cellModel = lib.File.LoadRootModelById(out status, lib.File.FindModelIdByName(lib.Name), true, false, true);
-
-                    break;
-                }
-            }
-            return cellModel;
-        }
 
         public static bool LocateAllCellsModels()
         {
