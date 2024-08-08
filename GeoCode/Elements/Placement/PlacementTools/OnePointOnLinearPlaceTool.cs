@@ -8,6 +8,7 @@ using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
 using Bentley.MstnPlatformNET;
+using GeoCode.Elements.Drawing;
 using GeoCode.Model;
 using GeoCode.Utils;
 using System;
@@ -19,13 +20,17 @@ namespace GeoCode.Cells.Placement.PlacementTools
 {
     internal class OnePointOnLinearPlaceTool : DgnPrimitiveTool
     {
+        // Variables d'initialisation de cellule partagée
         private readonly SharedCellDefinitionElement _cellDefinition;
         private readonly SharedCellElement _cellElement;
-        private List<LineStringElement> _lines = new List<LineStringElement>();
-        private List<LineElement> _line = new List<LineElement>();
-        private List<ArcElement> _arcs = new List<ArcElement>();
-        private LineStringElement _lineElement;
-        public DPoint3d _origin;
+
+        // Liste de ComplexString dans le dessin
+        private List<ComplexStringElement> _complexElements = new List<ComplexStringElement>();
+
+        //Element le plus proche
+        private ComplexStringElement _complexStringElement;
+
+        
 
         public OnePointOnLinearPlaceTool(SharedCellDefinitionElement cellDefinition, int toolName, int toolPrompt) : base(toolName, toolPrompt) {
             _cellDefinition = cellDefinition;
@@ -36,29 +41,23 @@ namespace GeoCode.Cells.Placement.PlacementTools
         protected override bool OnDataButton(DgnButtonEvent ev)
         {
             
-            
-                if (_lineElement != null)
+                if (_complexStringElement != null)
                 {
-                    var point = _lineElement.GetClosestPointFrom(ev.Point,out var angle);
+                    var point = _complexStringElement.GetClosestPointFrom(ev.Point,out var angle);
                     if (point.Distance(ev.Point) <= GeoCode.Application.MaxDistClose*100)
                     {
-                        _origin = point;
-                        _cellElement.GetSnapOrigin(out var origin);
-                        var translation = DTransform3d.FromTranslation(_origin - origin);
-                        _cellElement.ApplyTransform(new TransformInfo(translation));
+                        Draw.TranslateCell(_cellElement, point);
 
-                   
+                        Draw.RotateCellAroundZ(_cellElement, angle);
 
-                        var rotation = DTransform3d.FromRotationAroundLine(_origin,DVector3d.UnitZ,angle);
-                        _cellElement.ApplyTransform(new TransformInfo(rotation));
-                    }
+                }
                     _cellElement.AddToModel();
                     return true;
                 }
                 else
                 {
                     Log.Write("Aucun linéaire assez proche ");
-            }
+                }
             
 
             return false;
@@ -73,23 +72,12 @@ namespace GeoCode.Cells.Placement.PlacementTools
         {
             AccuSnap.SnapEnabled = true;
 
-            // On scan les chaines de lignes dans le dessin
-            var elements = Scan.GetElements(new List<MSElementType>() { MSElementType.LineString, MSElementType.Line, MSElementType.Arc });
+            // On scan les ComplexString Elements dans le dessin
+            var elements = Scan.GetElements(new List<MSElementType>() { MSElementType.ComplexString });
             Log.Write("Elements retrouvés : " + elements.Count);
             foreach (var element in elements)
             {
-
-                if (element.TypeName == "Ligne Brisée")
-                {
-                    _lines.Add(element as LineStringElement);
-                } else if (element.TypeName =="Arc")
-                {
-                    _arcs.Add(element as ArcElement);
-
-                } else if (element.TypeName =="Ligne")
-                {
-                    _line.Add(element as LineElement);
-                }
+                _complexElements.Add(element as ComplexStringElement);
             }
 
             BeginDynamics();
@@ -104,61 +92,42 @@ namespace GeoCode.Cells.Placement.PlacementTools
        
         protected override void OnDynamicFrame(DgnButtonEvent ev)
         {
-            
             double distance = double.MaxValue;
             bool found = false;
-            foreach (var element in _lines)
+
+            //Complex Element le plus proche dans la zone de recherche
+            foreach (var complex in _complexElements)
             {
-                if (element.GetClosestPointFrom(ev.Point,out var _).Distance(ev.Point) < distance
-                    && element.GetClosestPointFrom(ev.Point, out var _).Distance(ev.Point) <= GeoCode.Application.MaxDistClose*100)
+                if (complex.GetClosestPointFrom(ev.Point,out var _).Distance(ev.Point) < distance
+                    && complex.GetClosestPointFrom(ev.Point, out var _).Distance(ev.Point) <= GeoCode.Application.MaxDistClose*100)
                 {
                     found = true;
-                    _lineElement = element;
-                    distance = element.GetClosestPointFrom(ev.Point, out var _).Distance(ev.Point);
+                    _complexStringElement = complex;
+                    distance = complex.GetClosestPointFrom(ev.Point, out var _).Distance(ev.Point);
                 }
             }
 
-            foreach (var element in _line)
-            {
-                if (element.GetClosestPointFrom(ev.Point, out var _).Distance(ev.Point) < distance
-                    && element.GetClosestPointFrom(ev.Point, out var _).Distance(ev.Point) <= GeoCode.Application.MaxDistClose * 100)
-                {
-                    found = true;
-                    distance = element.GetClosestPointFrom(ev.Point, out var _).Distance(ev.Point);
-                }
-            }
-
-            if (!found) {
-                _lineElement = null; }
+            if (!found) _complexStringElement = null;
             
-            if (_lineElement != null)
+            // Complexe trouvé
+            if (_complexStringElement != null)
             {
-               
-                var point = _lineElement.GetClosestPointFrom(ev.Point, out var angle);
-                _cellElement.GetSnapOrigin(out var origin);
-                var translation = DTransform3d.FromTranslation(point - origin);
-                _cellElement.ApplyTransform(new TransformInfo(translation));
-               
-            } else
+                //Translation de la cellule sur le point le plus proche du curseur
+                var point = _complexStringElement.GetClosestPointFrom(ev.Point, out var angle);
+                Draw.TranslateCell(_cellElement, point);
+            }
+            else
             {
-                
-                _cellElement.GetSnapOrigin(out var origin);
-                _cellElement.ApplyTransform(new TransformInfo(DTransform3d.FromTranslation(ev.Point - origin)));
+                //Translation de la cellule sur le point du curseur
+                Draw.TranslateCell(_cellElement, ev.Point);
             }
 
-            var redraw = new RedrawElems();
-            redraw.SetDynamicsViewsFromActiveViewSet(ev.Viewport);
-            redraw.DrawMode = DgnDrawMode.TempDraw;
-            redraw.DrawPurpose = DrawPurpose.Dynamics;
-            redraw.DoRedraw(_cellElement);
+            Draw.DrawDynamicElement(_cellElement, ev);
 
         }
         public static void InstallNewInstance(SharedCellDefinitionElement cellDefinition)
         {
-            Log.Write("Installation placement en cours");
-            OnePointOnLinearPlaceTool tool = new OnePointOnLinearPlaceTool(cellDefinition,0, 0);
-            
-            tool.InstallTool();
+            new OnePointOnLinearPlaceTool(cellDefinition,0, 0).InstallTool();
         }
         #endregion
     }

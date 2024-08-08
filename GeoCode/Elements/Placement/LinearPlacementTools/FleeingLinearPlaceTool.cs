@@ -34,7 +34,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
         private List<Node> _nodesUnder = new List<Node>();
 
         private bool _nextPointReady = false;
-        private bool _verticalPoint = true;
+        private bool _verticalPoint = false;
         private List<LineElement> tempLines = new List<LineElement>();
         private LineStringElement _lineElement;
 
@@ -43,10 +43,8 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
         #region DgnPrimitiveTool Members
         protected override bool OnDataButton(DgnButtonEvent ev)
         {
-            if (!DynamicsStarted)
+            if (_origin == null)
             {
-                BeginDynamics();
-                
                 CellPlacement.PlaceTopoPoint(ev);
                
                 _origin = new()
@@ -164,7 +162,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
         {
             AccuSnap.SnapEnabled = true;
             AccuDraw.Active = true;
-            //BeginDynamics();
+            BeginDynamics();
         }
 
         protected override void OnRestartTool()
@@ -197,7 +195,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                 line = CreateElement.Line(_previous, new() { Point = thirdPoint, LType = LineType.DROITE });
                 Draw.DrawDynamicElement(line, ev);
                 return;
-            }
+            } else 
             if (_verticalPoint)
             {
                 var crossProductDirection = (_previous.Point.X - _origin.Point.X) * (ev.Point.Y - _origin.Point.Y) >

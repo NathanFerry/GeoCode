@@ -8,6 +8,7 @@ using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
 using Bentley.MstnPlatformNET;
+using GeoCode.Elements.Drawing;
 using GeoCode.Utils;
 using System;
 
@@ -21,7 +22,7 @@ namespace GeoCode.Cells.Placement.PlacementTools
         private readonly SharedCellElement _cellElement;
         private DPoint3d? _origin;
         private DPoint3d? _vectorPoint;
-        private int _oldPos = 1;
+        private bool _rotated = false;
         public TwoPointsRotationScalingSymmetricalPlaceTool(SharedCellDefinitionElement cellDefinition, int toolName, int toolPrompt) : base(toolName, toolPrompt) 
         {
             _cellDefinition = cellDefinition;
@@ -33,15 +34,10 @@ namespace GeoCode.Cells.Placement.PlacementTools
         protected override void OnPostInstall()
         {
             AccuSnap.SnapEnabled = true;
+            BeginDynamics();
         }
         protected override bool OnDataButton(DgnButtonEvent ev)
         {
-            if (!DynamicsStarted)
-            {
-
-                BeginDynamics();
-                return false;
-            }
 
             if (_origin is null)
             {
@@ -76,53 +72,27 @@ namespace GeoCode.Cells.Placement.PlacementTools
 
         protected override void OnDynamicFrame(DgnButtonEvent ev)
         {
-            if (_origin is null)
+            if (_origin == null)
             {
-                _cellElement.GetSnapOrigin(out var origin);
-                _cellElement.ApplyTransform(new TransformInfo(DTransform3d.FromTranslation(ev.Point - origin)));
+               Draw.TranslateCell(_cellElement,ev.Point);
             }
-            else if (_vectorPoint is null)
+            else if (_vectorPoint == null)
             {
                 var direction = new DVector3d(_origin.Value, ev.Point);
                 if (direction != DVector3d.Zero)
                 {
                     var angle = DVector3d.UnitX.AngleToXY(direction) - _cellElement.GetActualXYAngle(out _);
-                    var rotationMatrix = DTransform3d.FromRotationAroundLine(_origin.Value,DVector3d.UnitZ, angle);
-                    _cellElement.ApplyTransform(new TransformInfo(rotationMatrix));
+                    Draw.RotateCellAroundZ(_cellElement,angle);
                 }
 
-                _cellElement.GetSnapOrigin(out var origin);
-                var distance = _origin.Value.DistanceXY(ev.Point);
-
-                if (distance != 0)
-                {
-                    //distance = Math.Sqrt(Math.Pow(distance, 2) - Math.Pow(ev.Point.X - origin.X, 2));
-                    var factor = Math.Abs(distance / SharedCellHelper.ComputeLength(_cellElement));
-                    var scaling = DTransform3d.FromUniformScaleAndFixedPoint(origin, factor);
-                    _cellElement.ApplyTransform(new TransformInfo(scaling));
-                }
+                Draw.ScaleCellSquare(_cellElement, _origin.Value, ev.Point);
             }
             else
             {
-                var pos = (_vectorPoint.Value.X - _origin.Value.X) * (ev.Point.Y - _origin.Value.Y) >
-                          (_vectorPoint.Value.Y - _origin.Value.Y) * (ev.Point.X - _origin.Value.X)
-                    ? 1
-                    : -1;
-                if (pos != _oldPos)
-                {
-                    _cellElement.GetSnapOrigin(out var origin);
-                    var factor = Math.Abs(_origin.Value.DistanceXY(_vectorPoint.Value) / SharedCellHelper.ComputeLength(_cellElement));
-                    var side = DTransform3d.FromUniformScaleAndFixedPoint(origin, factor);
-                    _cellElement.ApplyTransform(new TransformInfo(side));
-                }
-                _oldPos = pos;
+                _rotated = Draw.AxeRotateVertical(_cellElement, _origin.Value, _vectorPoint.Value, ev.Point,_rotated);
             }
 
-            var redraw = new RedrawElems();
-            redraw.SetDynamicsViewsFromActiveViewSet(ev.Viewport);
-            redraw.DrawMode = DgnDrawMode.TempDraw;
-            redraw.DrawPurpose = DrawPurpose.Dynamics;
-            redraw.DoRedraw(_cellElement);
+            Draw.DrawDynamicElement(_cellElement, ev);
         }
 
         

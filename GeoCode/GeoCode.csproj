@@ -155,7 +155,7 @@
     <Compile Include="Elements\Placement\LinearPlacementTools\ThickLinearPlaceTool.cs" />
     <Compile Include="Elements\Placement\PlacementTools\OnePointOnLinearPlaceTool.cs" />
     <Compile Include="Elements\Placement\PlacementTools\OnePointPlaceTool.cs" />
-    <Compile Include="Elements\Placement\PlacementTools\OnePointRotationPlaceTool.cs" />
+    <Compile Include="Elements\Placement\PlacementTools\TwoPointsRotationPlaceTool.cs" />
     <Compile Include="Elements\Placement\PlacementTools\ThreePointRotationScalingPlaceTool.cs" />
     <Compile Include="Elements\Placement\PlacementTools\TwoPointsRotationScalingPlaceTool.cs" />
     <Compile Include="Elements\Placement\PlacementTools\TwoPointsRotationScalingSymmetricalPlaceTool.cs" />

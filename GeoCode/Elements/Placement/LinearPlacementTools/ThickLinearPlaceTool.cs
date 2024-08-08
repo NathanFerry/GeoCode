@@ -126,17 +126,16 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
             }
             if (_verticalPoint == false)
             {
-               
                 _verticalPoint = true;
                 var crossProductDirection = (_previous.Point.X - _origin.Point.X) * (ev.Point.Y - _origin.Point.Y) >
                      (_previous.Point.Y - _origin.Point.Y) * (ev.Point.X - _origin.Point.X)
                ? 1
                : -1;
 
-               
-         
 
-                _nodes.AddRange(crossProductDirection == -1 ?  listPointsUnder : listPointsOn);
+
+
+                _nodes.AddRange(crossProductDirection == -1 ? listPointsUnder : listPointsOn);
 
                 _nodes.Add(_origin);
 
@@ -146,7 +145,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
                     .First(element => element.Name == _linearElement.Level);
 
                     var complexElement = CreateElement.ComplexString(_nodes);
-                    Draw.DrawElement(complexElement,level);
+                    Draw.DrawElement(complexElement, level);
 
                 }
 
@@ -158,7 +157,7 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
 
                 return true;
             }
-            
+
             return true;
         }
 
@@ -240,8 +239,9 @@ namespace GeoCode.Cells.Placement.LinearPlacementTools
 
                 listPointsUnder.Reverse();
                 listPointsOn.Reverse();
-            }
-            _nextPointReady = false;
+                _nextPointReady = false;
+            } 
+           
             return true;
         }
 

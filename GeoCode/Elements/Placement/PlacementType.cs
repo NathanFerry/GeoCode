@@ -19,7 +19,7 @@ namespace GeoCode.Cells.Placement
         [JsonConstructor] public PlacementTypeElement(string value) { Value = value; }
         
         public static PlacementTypeElement OnePoint() => new("1 Point");
-        public static PlacementTypeElement OnePointRotation() => new("1 point - Rotation");
+        public static PlacementTypeElement TwoPointsRotation() => new("1 point - Rotation");
         public static PlacementTypeElement OnePointOnLinear() => new("1 point sur linéaire");
         public static PlacementTypeElement TwoPointsScaling() => new("2 Points - Mise à l'échelle");
         public static PlacementTypeElement TwoPointsRotationScaling() => new("2 Points - Rotation - Mise à l'échelle");

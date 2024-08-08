@@ -1,6 +1,7 @@
 ﻿using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
+using GeoCode.Elements.Drawing;
 
 namespace GeoCode.Cells.Placement.PlacementTools;
 
@@ -8,7 +9,7 @@ public class TwoPointsScalingPlaceTool : DgnPrimitiveTool
 {
     private readonly SharedCellDefinitionElement _cellDefinition;
     private readonly SharedCellElement _cellElement;
-    private DPoint3d? _center;
+    private DPoint3d? _origin;
     
     public TwoPointsScalingPlaceTool(SharedCellDefinitionElement cellDefinition, int toolName, int toolPrompt) : base(toolName, toolPrompt)
     {
@@ -18,19 +19,14 @@ public class TwoPointsScalingPlaceTool : DgnPrimitiveTool
     protected override void OnPostInstall()
     {
         AccuSnap.SnapEnabled = true;
+        BeginDynamics();
     }
     protected override bool OnDataButton(DgnButtonEvent ev)
     {  
-        if (!DynamicsStarted)
+        
+        if (_origin is null)
         {
-
-            BeginDynamics();
-            return false;
-        }
-
-        if (_center == null)
-        {
-            _center = ev.Point;
+            _origin = ev.Point;
             CellPlacement.PlaceTopoPoint(ev);
             return false;
         }
@@ -38,28 +34,23 @@ public class TwoPointsScalingPlaceTool : DgnPrimitiveTool
         _cellElement.AddToModel();
         CellPlacement.PlaceTopoPoint(ev);
 
+        _origin = null;
+
         return true;
     }
     
     protected override void OnDynamicFrame(DgnButtonEvent ev)
     {
-        if (_center == null)
+        if (_origin is null)
         {
-            _cellElement.GetSnapOrigin(out var origin);
-            _cellElement.ApplyTransform(new TransformInfo(DTransform3d.FromTranslation(ev.Point - origin)));
+            Draw.TranslateCell(_cellElement, ev.Point);
         }
         else
         {
-            var factor = _center.Value.DistanceXY(ev.Point) / (SharedCellHelper.ComputeWidth(_cellElement) / 2);
-            _cellElement.ApplyTransform(new TransformInfo(
-                DTransform3d.FromUniformScaleAndFixedPoint(_center.Value, factor)));
+            Draw.ScaleCellSquare(_cellElement,_origin.Value,ev.Point);
         }
         
-        var redraw = new RedrawElems();
-        redraw.SetDynamicsViewsFromActiveViewSet(ev.Viewport);
-        redraw.DrawMode = DgnDrawMode.TempDraw;
-        redraw.DrawPurpose = DrawPurpose.Dynamics;
-        redraw.DoRedraw(_cellElement);
+        Draw.DrawDynamicElement(_cellElement, ev);
     } 
 
     protected override bool OnResetButton(DgnButtonEvent ev)
@@ -70,6 +61,7 @@ public class TwoPointsScalingPlaceTool : DgnPrimitiveTool
 
     protected override void OnRestartTool()
     {
+        _origin = null;
         InstallNewInstance(_cellDefinition);
     }
 

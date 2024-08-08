@@ -4,6 +4,7 @@ using Bentley.MstnPlatformNET;
 using GeoCode.Model;
 using GeoCode.Utils;
 using System.Collections.Generic;
+using System.Text;
 namespace GeoCode.Elements.Drawing
 {
     public static class CreateElement
@@ -57,6 +58,8 @@ namespace GeoCode.Elements.Drawing
             Node previous = null;
             Node preprevious = null;
 
+            var arcDone = false;
+
             foreach ( Node node in nodes )
             {
                 Log.Write($"Previous = null : {previous == null}");
@@ -66,8 +69,10 @@ namespace GeoCode.Elements.Drawing
                     if (previous.LType == LineType.DROITE)
                     {
                         Log.Write(complex.AddComponentElement(Line(previous, node)).ToString());
-                    }
-                    preprevious = previous;  previous = node; continue;
+                        
+                    } 
+                    preprevious = previous; previous = node; continue;
+
                 }
 
                 switch (previous.LType)
@@ -78,6 +83,8 @@ namespace GeoCode.Elements.Drawing
                         Log.Write("Droite");
                         complex.AddComponentElement(Line(previous, node));
 
+                        if (arcDone) arcDone = false;
+
                         break;
 
                     case LineType.ARC:
@@ -86,7 +93,15 @@ namespace GeoCode.Elements.Drawing
 
                             // Création d'Arc
                             Log.Write("Arc");
-                            complex.AddComponentElement(Arc(preprevious, previous, node));
+                            var arc = Arc(preprevious, previous, node);
+                            if (arc != null && !arcDone)
+                            {
+                                complex.AddComponentElement(arc);
+                                arcDone = true;
+                            } else
+                            {
+                                arcDone = false;
+                            }
                         }
                         break;
                 }

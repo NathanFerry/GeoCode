@@ -44,8 +44,6 @@ namespace GeoCode.Utils
                     }
                 }
 
-                
-
                 return true;
             } else
             {
@@ -61,25 +59,8 @@ namespace GeoCode.Utils
         }
         public static IEnumerable<SharedCellDefinitionElement> GetAllSharedCellsFromLibrary()
         {
-            Session.Instance.GetActiveDgnModel().ReadAndLoadDgnAttachments(new DgnAttachmentLoadOptions(true, true, true));
-            
             return listCells.Concat(Session.Instance.GetActiveDgnFile().GetNamedSharedCellDefinitions());
         }
-
-        public static DgnModel LocateCellModel(SharedCellDefinitionElement cellDef)
-        {
-            var opts = CellLibraryOptions.Include3d 
-                | CellLibraryOptions.IncludeAllLibraries 
-                | CellLibraryOptions.IncludeParametric 
-                | CellLibraryOptions.IncludeShared
-                | CellLibraryOptions.IncludeNonParametric
-                | CellLibraryOptions.DefaultAll
-                | CellLibraryOptions.Default
-                ;
-            var libs = new CellLibraryCollection(opts);
-
-            var name = cellDef;
-            DgnModel cellModel = null;
 
 
         public static bool LocateAllCellsModels()

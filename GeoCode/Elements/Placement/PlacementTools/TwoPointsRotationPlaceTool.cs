@@ -8,18 +8,19 @@ using Bentley.DgnPlatformNET;
 using Bentley.DgnPlatformNET.Elements;
 using Bentley.GeometryNET;
 using Bentley.MstnPlatformNET;
+using GeoCode.Elements.Drawing;
 using GeoCode.Utils;
 
 #endregion
 
 namespace GeoCode.Cells.Placement.PlacementTools
 {
-    public class OnePointRotationPlaceTool : DgnPrimitiveTool
+    public class TwoPointsRotationPlaceTool : DgnPrimitiveTool
     {
         private readonly SharedCellDefinitionElement _cellDefinition;
         private readonly SharedCellElement _cellElement;
         private DPoint3d? _origin;
-        public OnePointRotationPlaceTool(SharedCellDefinitionElement cellDefinition, int toolName, int toolPrompt) : base(toolName, toolPrompt) 
+        public TwoPointsRotationPlaceTool(SharedCellDefinitionElement cellDefinition, int toolName, int toolPrompt) : base(toolName, toolPrompt) 
         {
             _cellDefinition = cellDefinition;
             _cellElement = SharedCellHelper.CreateSharedCell(cellDefinition, DPoint3d.Zero);
@@ -29,13 +30,7 @@ namespace GeoCode.Cells.Placement.PlacementTools
         #region DgnPrimitiveTool Members
         protected override bool OnDataButton(DgnButtonEvent ev)
         {
-            if (!DynamicsStarted)
-            {
-
-                BeginDynamics();
-                return false;
-            }
-
+            // Origine de la cellule
             if (_origin is null)
             {
                 _origin = ev.Point;
@@ -43,8 +38,10 @@ namespace GeoCode.Cells.Placement.PlacementTools
                 return false;
             }
 
+            //Rotation faite (sans point Topo)
             _cellElement.AddToModel();
-            
+
+            _origin = null;
             return true;
         }
 
@@ -52,6 +49,7 @@ namespace GeoCode.Cells.Placement.PlacementTools
         protected override void OnPostInstall()
         {
             AccuSnap.SnapEnabled = true;
+            BeginDynamics();
         }
         protected override void OnRestartTool()
         {
@@ -68,27 +66,20 @@ namespace GeoCode.Cells.Placement.PlacementTools
         {
             if (_origin is null)
             {
-                _cellElement.GetSnapOrigin(out var origin);
-                _cellElement.ApplyTransform(new TransformInfo(DTransform3d.FromTranslation(ev.Point - origin)));
+               Draw.TranslateCell(_cellElement, ev.Point);
             } else
             {
                 var direction = new DVector3d(_origin.Value, ev.Point);
                 var angle = DVector3d.UnitX.AngleToXY(direction) - _cellElement.GetActualXYAngle(out _);
-                var rotationMatrix = DTransform3d.FromRotationAroundLine(_origin.Value, DVector3d.UnitZ, angle);
-                _cellElement.ApplyTransform(new TransformInfo(rotationMatrix));
+                Draw.RotateCellAroundZ(_cellElement, angle);
             }
 
-            var redraw = new RedrawElems();
-            redraw.SetDynamicsViewsFromActiveViewSet(ev.Viewport);
-            redraw.DrawMode = DgnDrawMode.TempDraw;
-            redraw.DrawPurpose = DrawPurpose.Dynamics;
-            redraw.DoRedraw(_cellElement);
+            Draw.DrawDynamicElement(_cellElement, ev);
         }
 
         public static void InstallNewInstance(SharedCellDefinitionElement cellDefinition)
         {
-            OnePointRotationPlaceTool tool = new(cellDefinition, 0, 0);
-            tool.InstallTool();
+            new TwoPointsRotationPlaceTool(cellDefinition, 0, 0).InstallTool();
         }
         #endregion
     }
