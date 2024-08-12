@@ -49,6 +49,8 @@ namespace GeoCode.UI
             this.LinearLabel.Text = "Default";
             this.LevelSelection.ItemsSource = DgnHelper.GetAllLevelsFromLibrary().Select(it => it.Name);
             this.LevelSelection.SelectedItem = DgnHelper.GetAllLevelsFromLibrary().Select(it => it.Name).FirstOrDefault(); 
+
+            this.LineStylePicker.
             
             if (l!=null)
             {

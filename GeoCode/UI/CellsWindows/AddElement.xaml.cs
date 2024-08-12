@@ -94,19 +94,20 @@ namespace GeoCode.UI
         {
             if (SavedCellToPaste.name == null)
             {
-                MessageBox.Show("Aucune cellule n'a été copiée", 
-                    "Cellule", 
-                    MessageBoxButton.OK, 
+                MessageBox.Show("Aucune cellule n'a été copiée",
+                    "Cellule",
+                    MessageBoxButton.OK,
                     MessageBoxImage.Error);
-            } else
+            }
+            else
             {
                 this.CellLabel.Text = SavedCellToPaste.label;
                 this.CellSelection.SelectedItem = SavedCellToPaste.name;
                 this.LevelSelection.SelectedItem = SavedCellToPaste.level;
                 this.PlacementSelection.SelectedItem = SavedCellToPaste.placement.ToString();
             }
-                
+        }       
             
-        }
+
     }
 }

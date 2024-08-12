@@ -17,32 +17,39 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Label Width="70" HorizontalAlignment="Center">Libellé</Label>
+            <Label Width="150" HorizontalAlignment="Center">Libellé</Label>
             <StackPanel VerticalAlignment="Center" Width="150">
                 <TextBox  Name="LinearLabel"/>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Label Width="70" HorizontalAlignment="Center">Fonction</Label>
+            <Label Width="150" HorizontalAlignment="Center">Fonction</Label>
             <StackPanel Width="150">
                 <ComboBox Name="LinearFunction" IsEditable="True"  IsTextSearchEnabled="True" SelectionChanged="LinearFunction_SelectionChanged"/>
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <Label Width="70" HorizontalAlignment="Center">Niveau</Label>
+            <Label Width="150" HorizontalAlignment="Center">Niveau</Label>
             <StackPanel Width="150">
                 <ComboBox Name="LevelSelection" IsEditable="True" IsTextSearchEnabled="True"/>
             </StackPanel>
         </StackPanel>
         
         <StackPanel Grid.Row="3" Orientation="Horizontal">
-            <Label Name="labelLongueur"  Width="70" HorizontalAlignment="Center"> </Label>
+            <Label Name="labelLongueur"  Width="150" HorizontalAlignment="Center"> </Label>
             <StackPanel Width="150">
                 <TextBox IsEnabled="False" Name="NumberTextBox" PreviewTextInput="NumberValidationTextBox"/>
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Row="4" Orientation="Vertical">
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <Label Name="LineStyleLabel"  Width="150" HorizontalAlignment="Center">Style de ligne</Label>
+            <StackPanel Width="150">
+                <bentleywpf:LineStylePicker Name="LineStylePicker"></bentleywpf:LineStylePicker>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="5" Orientation="Vertical">
             <Button Margin="5"  Name="AddElementButton"  Width="40" Click="AddElementButton_OnClick">
                 <Image Source="../Pictures/plus.png"></Image>
                 <Button.Style>

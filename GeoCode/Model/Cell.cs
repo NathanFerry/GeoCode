@@ -49,7 +49,7 @@ namespace GeoCode.Model
                 OnPropertyChanged();
             }
         }
-        
+
         private string _level;
         public string Level
         {
@@ -60,7 +60,39 @@ namespace GeoCode.Model
                 OnPropertyChanged();
             }
         }
-        
+        private uint _color;
+        public uint Color
+        {
+            get => _color;
+            set
+            {
+                _color = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _scaleX;
+        public double ScaleX
+        {
+            get => _scaleX;
+            set
+            {
+                _scaleX = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _scaleY;
+        public double ScaleY
+        {
+            get => _scaleY;
+            set
+            {
+                _scaleY = value;
+                OnPropertyChanged();
+            }
+        }
+
         private PlacementTypeElement _placement;
         public PlacementTypeElement Placement
         {
